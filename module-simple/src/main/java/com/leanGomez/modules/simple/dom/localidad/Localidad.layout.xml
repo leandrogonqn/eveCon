@@ -29,7 +29,7 @@
                         <bs3:col span="6">
                             <c:fieldSet name="Nombre">
                                 <c:action id="borrarLocalidad"/>
-	                                <c:property id="localidadesNombre" namedEscaped="true">
+	                                <c:property id="localidadNombre" namedEscaped="true">
 	                                <c:action id="actualizarNombre" position="RIGHT"></c:action>
                                 </c:property>
 	                                <c:property id="localidadActivo" namedEscaped="true">
