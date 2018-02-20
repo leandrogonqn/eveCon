@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -20,7 +19,6 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 import org.apache.isis.applib.services.message.MessageService;
-import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.services.title.TitleService;
 
 import com.leanGomez.modules.simple.dom.localidad.Localidad;
@@ -44,7 +42,7 @@ public class ClientePersonaFisica extends Cliente {
 	
 	// region > title
 	public TranslatableString title() {
-		return TranslatableString.tr("Cliente: {clienteNombre}", "clienteNombre",
+		return TranslatableString.tr("Cliente: {personaNombre}", "personaNombre",
 				getPersonaNombre() + " Cuit/Cuil: " + getPersonaCuitCuil());
 	}
 	// endregion
@@ -275,9 +273,6 @@ public class ClientePersonaFisica extends Cliente {
 		setPersonaActivo(false);
 	}
 	// endregion
-	
-	@javax.inject.Inject
-	RepositoryService repositoryService;
 
 	@javax.inject.Inject
 	LocalidadRepository localidadRepository;
@@ -287,9 +282,6 @@ public class ClientePersonaFisica extends Cliente {
 
 	@javax.inject.Inject
 	MessageService messageService;
-
-	@Inject
-	ClienteRepository clientesRepository;
 
 	// endregion
 	
