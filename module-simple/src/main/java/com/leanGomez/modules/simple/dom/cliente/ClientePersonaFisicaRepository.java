@@ -19,10 +19,9 @@ import com.leanGomez.modules.simple.dom.persona.TipoDeDocumento;
 public class ClientePersonaFisicaRepository {
 
 	public ClientePersonaFisica crear(final String personaNombre,TipoDeDocumento clienteTipoDocumento, int numeroDocumento, 
-			Sexo clienteSexo, Localidad personaLocalidad, final String personaDireccion, 
-			final String personaTelefono, final String personaMail,
-			final Date fechaNacimiento) {
-		final ClientePersonaFisica object = new ClientePersonaFisica(personaNombre, personaLocalidad, personaDireccion, personaTelefono, personaMail, clienteSexo, fechaNacimiento, clienteTipoDocumento, numeroDocumento);
+			Sexo clienteSexo, Localidad personaLocalidad, final String personaDireccion, final String personaTelefono, 
+			final String personaMail, final Date fechaNacimiento, final boolean clienteNotificacionCumpleanios) {
+		final ClientePersonaFisica object = new ClientePersonaFisica(personaNombre, personaLocalidad, personaDireccion, personaTelefono, personaMail, clienteSexo, fechaNacimiento, clienteTipoDocumento, numeroDocumento, clienteNotificacionCumpleanios);
 		serviceRegistry.injectServicesInto(object);
 		repositoryService.persist(object);
 		return object;

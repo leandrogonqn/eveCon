@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package com.leanGomez.modules.simple.dom.localidad;
+package com.leanGomez.modules.simple.dom.adjunto;
 
 import java.util.List;
 import org.apache.isis.applib.annotation.DomainService;
@@ -21,41 +21,35 @@ import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.query.QueryDefault;
 import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.applib.value.Blob;
 
-import com.leanGomez.modules.simple.dom.provincia.Provincia;
+import com.leanGomez.modules.simple.dom.salon.Salon;
 
-@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Localidad.class)
-public class LocalidadRepository {
+@DomainService(nature = NatureOfService.DOMAIN, repositoryFor = Adjunto.class)
+public class AdjuntoRepository {
 
-	public List<Localidad> listar() {
-		return repositoryService.allInstances(Localidad.class);
+	public List<Adjunto> listar() {
+		return repositoryService.allInstances(Adjunto.class);
 	}
 
-	public List<Localidad> buscarPorNombre(final String localidadNombre) {
-
-		return repositoryService.allMatches(new QueryDefault<>(Localidad.class, "buscarPorNombre", "localidadesNombre",
-				localidadNombre.toLowerCase()));
-
+	public List<Adjunto> buscarPorDescripcion(final String adjuntoDescripcion) {
+		return repositoryService.allMatches(
+				new QueryDefault<>(Adjunto.class, "buscarPorDescripcion", "adjuntoDescripcion", adjuntoDescripcion));
 	}
 
-	public List<Localidad> listarActivos() {
-		return repositoryService.allMatches(new QueryDefault<>(Localidad.class, "listarActivos"));
+	public List<Adjunto> listarActivos() {
+		return repositoryService.allMatches(new QueryDefault<>(Adjunto.class, "listarActivos"));
 	}
 
-	public List<Localidad> listarInactivos() {
-		return repositoryService.allMatches(new QueryDefault<>(Localidad.class, "listarInactivos"));
+	public List<Adjunto> listarInactivos() {
+		return repositoryService.allMatches(new QueryDefault<>(Adjunto.class, "listarInactivos"));
 	}
 
-	public Localidad crear(final String localidadNombre, Provincia localidadProvincia) {
-		final Localidad object = new Localidad(localidadNombre, localidadProvincia);
+	public Adjunto crear(final String adjuntoDescripcion, final Blob imagen, final Salon salon) {
+		final Adjunto object = new Adjunto(adjuntoDescripcion, imagen, salon);
 		serviceRegistry.injectServicesInto(object);
 		repositoryService.persist(object);
 		return object;
-	}
-	
-	public List<Localidad> buscarPorProvincia(final Provincia localidadProvincia) {
-		return repositoryService
-				.allMatches(new QueryDefault<>(Localidad.class, "buscarPorProvincia", "localidadProvincia", localidadProvincia));
 	}
 
 	@javax.inject.Inject

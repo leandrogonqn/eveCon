@@ -30,38 +30,38 @@
                             <c:fieldSet name="Nombre">
                                 <c:action id="borrarCliente"/>
                                 <c:property id="personaNombre" namedEscaped="true">
-                              	<c:action id="actualizarNombre" position="RIGHT"></c:action>
+                              	<c:action id="modificarNombre" position="RIGHT"></c:action>
                                 </c:property>
 								<c:property id="clienteTipoDocumento" namedEscaped="true">
-                                <c:action id="actualizarTipoDocumento" position="RIGHT"></c:action>
+                                <c:action id="modificarTipoDocumento" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="clienteNumeroDocumento" namedEscaped="true">
-                                <c:action id="actualizarDni" position="RIGHT"></c:action>
+                                <c:action id="modificarDni" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="clienteSexo" namedEscaped="true">
-                                <c:action id="actualizarSexo" position="RIGHT"></c:action>
+                                <c:action id="modificarSexo" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="personaDireccion" namedEscaped="true">
-                                <c:action id="actualizarDireccion" position="RIGHT"></c:action>
+                                <c:action id="modificarDireccion" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="personaLocalidad" namedEscaped="true">
-                                <c:action id="actualizarLocalidad" position="RIGHT"></c:action>
+                                <c:action id="modificarLocalidad" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="personaTelefono" namedEscaped="true">
-                                <c:action id="actualizarTelefono" position="RIGHT"></c:action>
+                                <c:action id="modificarTelefono" position="RIGHT"></c:action>
                                 </c:property>
 								<c:property id="personaMail" namedEscaped="true">
-								<c:action id="actualizarMail" position="RIGHT"></c:action>
+								<c:action id="modificarMail" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="personaCuitCuil" namedEscaped="true"/>
 								<c:property id="clienteFechaNacimiento" namedEscaped="true">
-								<c:action id="actualizarFechaNacimiento" position="RIGHT"></c:action>
+								<c:action id="modificarFechaNacimiento" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="clienteNotificacionCumpleanios" namedEscaped="true">
-                                <c:action id="actualizarNotificacionCumpleanios" position="RIGHT"></c:action>
+                                <c:action id="modificarNotificacionCumpleanios" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="personaActivo" namedEscaped="true">
-                                <c:action id="actualizarActivo" position="RIGHT"></c:action>
+                                <c:action id="modificarActivo" position="RIGHT"></c:action>
                                 </c:property>
                            </c:fieldSet>
                         </bs3:col>

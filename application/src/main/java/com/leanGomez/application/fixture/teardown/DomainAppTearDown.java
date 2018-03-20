@@ -20,13 +20,13 @@ package com.leanGomez.application.fixture.teardown;
 
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
-import com.leanGomez.modules.simple.fixture.teardown.SimpleModuleTearDown;
+import com.leanGomez.modules.simple.fixture.teardown.ProvinciaTearDown;
 
 public class DomainAppTearDown extends FixtureScript {
 
     @Override
     protected void execute(ExecutionContext executionContext) {
-        executionContext.executeChild(this, new SimpleModuleTearDown());
+        executionContext.executeChild(this, new ProvinciaTearDown());
     }
 
 }

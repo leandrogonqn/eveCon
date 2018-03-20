@@ -12,9 +12,9 @@ import org.apache.isis.applib.services.repository.RepositoryService;
 @DomainService(nature =NatureOfService.DOMAIN, repositoryFor = Cliente.class)
 public class ClienteRepository {
 	
-	public List<Cliente> buscarPorNombre(final String clienteNombre) {
+	public List<Cliente> buscarPorNombre(final String personaNombre) {
 		return repositoryService.allMatches(
-				new QueryDefault<>(Cliente.class, "buscarPorNombre", "clienteNombre", clienteNombre.toLowerCase()));
+				new QueryDefault<>(Cliente.class, "buscarPorNombre", "personaNombre", personaNombre.toLowerCase()));
 	}
 
 	public List<Cliente> buscarPorCuilCuit(final int personaCuitCuil) {

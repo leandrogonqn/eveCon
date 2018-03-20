@@ -3,11 +3,16 @@ package com.leanGomez.modules.simple.dom.provincia;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Element;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.Persistent;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Auditing;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -18,6 +23,9 @@ import org.apache.isis.applib.annotation.Publishing;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.title.TitleService;
+
+import com.leanGomez.modules.simple.dom.localidad.Localidad;
+import com.leanGomez.modules.simple.dom.localidad.LocalidadRepository;
 
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "simple", table = "Provincia")
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "provinciaId")
@@ -42,7 +50,7 @@ public class Provincia implements Comparable<Provincia>{
 
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Nombre")
+	@PropertyLayout(named = "Provincia")
 	private String provinciaNombre;
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
@@ -68,21 +76,21 @@ public class Provincia implements Comparable<Provincia>{
 		setProvinciaActivo(false);
 	}
 	
-	public Provincia actualizarNombre(@ParameterLayout(named = "Nombre") final String provinciaNombre) {
+	public Provincia modificarNombre(@ParameterLayout(named = "Nombre") final String provinciaNombre) {
 		setProvinciaNombre(provinciaNombre);
 		return this;
 	}
 
-	public String default0ActualizarNombre() {
+	public String default0ModificarNombre() {
 		return getProvinciaNombre();
 	}
 
-	public Provincia actualizarActivo(@ParameterLayout(named = "Activo") final boolean provinciaActivo) {
+	public Provincia modificarActivo(@ParameterLayout(named = "Activo") final boolean provinciaActivo) {
 		setProvinciaActivo(provinciaActivo);
 		return this;
 	}
 
-	public boolean default0ActualizarActivo() {
+	public boolean default0ModificarActivo() {
 		return isProvinciaActivo();
 	}
 
@@ -119,6 +127,12 @@ public class Provincia implements Comparable<Provincia>{
 	public List<Provincia> listarInactivos() {
 		return provinciasRepository.listarInactivos();
 	}
+	
+	@ActionLayout(named = "Listar Localidades de esta Provincia")
+	@MemberOrder(sequence = "5")
+	public List<Localidad> listarProvincia(){
+		return localidadRepository.buscarPorProvincia(this);
+	}
 
 	
 	@javax.inject.Inject
@@ -129,5 +143,8 @@ public class Provincia implements Comparable<Provincia>{
 
 	@Inject
 	ProvinciaRepository provinciasRepository;
+	
+	@Inject
+	LocalidadRepository localidadRepository;
 	
 }

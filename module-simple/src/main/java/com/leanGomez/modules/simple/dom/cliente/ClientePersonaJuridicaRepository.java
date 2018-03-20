@@ -15,8 +15,8 @@ import com.leanGomez.modules.simple.dom.localidad.Localidad;
 @DomainService(nature =NatureOfService.DOMAIN, repositoryFor = ClientePersonaJuridica.class)
 public class ClientePersonaJuridicaRepository {
 
-	public ClientePersonaJuridica crear(final String personaNombre, Localidad personaLocalidad, final String personaDireccion, 
-			final String personaTelefono, final String personaMail, final String personaCuitCuil) {
+	public ClientePersonaJuridica crear(final String personaNombre, final String personaCuitCuil, Localidad personaLocalidad, 
+			final String personaDireccion, final String personaTelefono, final String personaMail) {
 		final ClientePersonaJuridica object = new ClientePersonaJuridica(personaNombre, personaCuitCuil, personaLocalidad, personaDireccion, personaTelefono, personaMail);
 		serviceRegistry.injectServicesInto(object);
 		repositoryService.persist(object);

@@ -30,10 +30,10 @@
                             <c:fieldSet name="Nombre">
                                 <c:action id="borrarProvincia"/>
                                 <c:property id="provinciaNombre" namedEscaped="true">
-                                <c:action id="actualizarNombre" position="RIGHT"></c:action>
+                                <c:action id="modificarNombre" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="provinciaActivo" namedEscaped="true">
-                                <c:action id="actualizarActivo" position="RIGHT"></c:action>
+                                <c:action id="modificarActivo" position="RIGHT"></c:action>
                                 </c:property>
                             </c:fieldSet>
                         </bs3:col>
@@ -59,6 +59,17 @@
         </bs3:col>
         <bs3:col span="6">
             <bs3:tabGroup  unreferencedCollections="true">
+            </bs3:tabGroup>
+            <bs3:tabGroup  unreferencedCollections="true">
+            	<bs3:tab name="Lista de vehiculos">
+                    <bs3:row>
+                        <bs3:col span="12" size="MD">
+				        </bs3:col>
+				        <bs3:col span="12">    
+                            <c:collection defaultView="table" id="lodalidades" />
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>
             </bs3:tabGroup>
         </bs3:col>
     </bs3:row>

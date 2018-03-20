@@ -40,69 +40,69 @@ public class ClientePersonaJuridica extends Cliente {
 			String personaDireccion, String personaTelefono, String personaMail) {
 		super();
 		setPersonaNombre(personaNombre);
+		setPersonaCuitCuil(personaCuitCuil);
 		setPersonaLocalidad(personaLocalidad);
 		setPersonaDireccion(personaDireccion);
 		setPersonaTelefono(personaTelefono);
 		setPersonaMail(personaMail);
 		setPersonaActivo(true);
-		setPersonaCuitCuil(personaCuitCuil);
 	}
 	
-	public Cliente actualizarLocalidad(@ParameterLayout(named = "Localidad") final Localidad name) {
+	public Cliente modificarLocalidad(@ParameterLayout(named = "Localidad") final Localidad name) {
 		setPersonaLocalidad(name);
 		return this;
 	}
 
-	public List<Localidad> choices0ActualizarLocalidad() {
+	public List<Localidad> choices0ModificarLocalidad() {
 		return localidadRepository.listarActivos();
 	}
 
-	public Localidad default0ActualizarLocalidad() {
+	public Localidad default0ModificarLocalidad() {
 		return getPersonaLocalidad();
 	}
 
-	public Cliente actualizarNombre(@ParameterLayout(named = "Nombre") final String personaNombre) {
+	public Cliente modificarNombre(@ParameterLayout(named = "Nombre") final String personaNombre) {
 		setPersonaNombre(personaNombre);
 		return this;
 	}
 
-	public String default0ActualizarNombre() {
+	public String default0ModificarNombre() {
 		return getPersonaNombre();
 	}
 
-	public Cliente actualizarDireccion(@ParameterLayout(named = "Direccion") final String personaDireccion) {
+	public Cliente modificarDireccion(@ParameterLayout(named = "Direccion") final String personaDireccion) {
 		setPersonaDireccion(personaDireccion);
 		return this;
 	}
 
-	public String default0ActualizarDireccion() {
+	public String default0ModificarDireccion() {
 		return getPersonaDireccion();
 	}
 
-	public Cliente actualizarTelefono(@ParameterLayout(named = "Telefono") final String personaTelefono) {
+	public Cliente modificarTelefono(@ParameterLayout(named = "Telefono") final String personaTelefono) {
 		setPersonaTelefono(personaTelefono);
 		return this;
 	}
 
-	public String default0ActualizarTelefono() {
+	public String default0ModificarTelefono() {
 		return getPersonaTelefono();
 	}
 
-	public Cliente actualizarMail(@ParameterLayout(named = "Mail") final String personaMail) {
+	public Cliente modificarMail(@ParameterLayout(named = "Mail") final String personaMail) {
 		setPersonaMail(personaMail);
 		return this;
 	}
 
-	public String default0ActualizarMail() {
+	public String default0ModificarMail() {
 		return getPersonaMail();
 	}
 
-	public Cliente actualizarActivo(@ParameterLayout(named = "Activo") final boolean personaActivo) {
+	public Cliente modificarActivo(@ParameterLayout(named = "Activo") final boolean personaActivo) {
 		setPersonaActivo(personaActivo);
 		return this;
 	}
 
-	public boolean default0ActualizarActivo() {
+	public boolean default0ModificarActivo() {
 		return isPersonaActivo();
 	}
 

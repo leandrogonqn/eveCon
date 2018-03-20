@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
@@ -38,19 +39,36 @@ public class ClientePersonaFisicaMenu {
 	}
 
 	@ActionLayout(named = "Crear Cliente")
-	@MemberOrder(sequence = "1")
+	@MemberOrder(sequence = "1.2")
 	public Cliente crear(@ParameterLayout(named = "Nombre y apellido") final String personaNombre,
 			@ParameterLayout(named = "Tipo de Documento") final TipoDeDocumento clienteTipoDocumento,
-			@ParameterLayout(named = "Numero de Documento") final int numeroDocumento,
+			@ParameterLayout(named = "Numero de Documento") final int clienteNumeroDocumento,
 			@ParameterLayout(named = "Sexo") final Sexo clienteSexo,
 			@ParameterLayout(named = "Localidad") final Localidad personaLocalidad,
-			@ParameterLayout(named = "Dirección") final String personaDireccion,
+			@Nullable @ParameterLayout(named = "Dirección") @Parameter(optionality=Optionality.OPTIONAL) final String personaDireccion,
 			@Nullable @ParameterLayout(named = "Teléfono") @Parameter(optionality = Optionality.OPTIONAL) final String personaTelefono,
 			@Nullable @ParameterLayout(named = "E-Mail") @Parameter(optionality = Optionality.OPTIONAL) final String personaMail,
 			@Nullable @ParameterLayout(named = "Fecha de Nacimiento") @Parameter(optionality = Optionality.OPTIONAL) final Date clienteFechaNacimiento,
 			@ParameterLayout(named = "Notif. Cumpleaños") final boolean clienteNotificacionCumpleanios) {
-		return clientePersonaFisicaRepository.crear(personaNombre, clienteTipoDocumento, numeroDocumento, clienteSexo, personaLocalidad, personaDireccion, personaTelefono, personaMail, clienteFechaNacimiento);
+		return clientePersonaFisicaRepository.crear(personaNombre, clienteTipoDocumento, clienteNumeroDocumento, clienteSexo, personaLocalidad, personaDireccion, personaTelefono, personaMail, clienteFechaNacimiento, clienteNotificacionCumpleanios);
 				
+	}
+	
+	public String validateCrear(final String clienteNombre, final TipoDeDocumento clienteTipoDocumento, 
+			final int clienteNumeroDocumento, final Sexo clienteSexo,
+			final Localidad personaLocalidad, final String personaDireccion, final String personaTelefono,
+			final String personaMail, final Date clienteFechaNacimiento, final boolean clienteNotificacionCumpleanios) {
+		if ((clienteFechaNacimiento == null) & (clienteNotificacionCumpleanios == true)) {
+			return "Se necesita cargar fecha de nacimiento para poder cargar el cumpleaños";
+		}
+		Date hoy = new Date();
+		if (clienteFechaNacimiento!=null) {
+			if (clienteFechaNacimiento.after(hoy)) {
+				return "La fecha de nacimiento es mayor a la fecha actual";
+			}
+		}
+
+		return "";
 	}
 	
 	@Action(semantics = SemanticsOf.SAFE)
@@ -59,17 +77,18 @@ public class ClientePersonaFisicaMenu {
 	public List<ClientePersonaFisica> listar() {
 		return clientePersonaFisicaRepository.listar();
 	}
+	
+	@Action(semantics = SemanticsOf.SAFE)
+	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, cssClassFa = "fa-search", named = "Buscar Cliente Por Nombre")
+	@MemberOrder(sequence = "1.1")
+	public List<Cliente> buscarPorNombre(@ParameterLayout(named = "Nombre") final String personaNombre) {
+		return clienteRepository.buscarPorNombre(personaNombre);
+	}
 
-//	public String validateCrear(final String clienteNombre, final String clienteApellido,
-//			final TipoDocumento clienteTipoDocumento, final int clienteDni, final Sexo clienteSexo,
-//			final Localidad personaLocalidad, final String personaDireccion, final String personaTelefono,
-//			final String personaMail, final Date clienteFechaNacimiento, final boolean clienteNotificacionCumpleanios) {
-//		if ((clienteFechaNacimiento == null) & (clienteNotificacionCumpleanios == true)) {
-//			return "Se necesita cargar fecha de nacimiento para poder cargar el cumpleaños";
-//		}
-//		return "";
-//	}
 
+	@Inject
+	ClienteRepository clienteRepository;
+	
 	@javax.inject.Inject
 	ClientePersonaFisicaRepository clientePersonaFisicaRepository;
 

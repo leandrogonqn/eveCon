@@ -18,7 +18,7 @@ package com.leanGomez.application.bdd.specglue;
 
 import org.apache.isis.core.specsupport.specs.CukeGlueAbstract;
 
-import com.leanGomez.application.fixture.scenarios.DomainAppDemo;
+import com.leanGomez.application.fixture.scenarios.ProvinciaFixture;
 
 import cucumber.api.java.Before;
 
@@ -26,7 +26,7 @@ public class CatalogOfFixturesGlue extends CukeGlueAbstract {
 
     @Before(value={"@integration", "@DomainAppDemo"}, order=20000)
     public void integrationFixtures() throws Throwable {
-        scenarioExecution().install(new DomainAppDemo());
+        scenarioExecution().install(new ProvinciaFixture());
     }
 
 }

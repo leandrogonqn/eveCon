@@ -37,24 +37,25 @@ import org.apache.isis.applib.services.title.TitleService;
 import com.leanGomez.modules.simple.dom.provincia.Provincia;
 import com.leanGomez.modules.simple.dom.provincia.ProvinciaRepository;
 
-@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "simple", table = "Localidad")
+@javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "simple", table = "Localidades")
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "localidadId")
 @javax.jdo.annotations.Queries({
 		@javax.jdo.annotations.Query(name = "buscarPorNombre", language = "JDOQL", value = "SELECT "
 				+ "FROM com.leanGomez.modules.simple.dom.localidad.Localidad "
-				+ "WHERE localidadNombre.toLowerCase().indexOf(:localidadNombre) >= 0 "),
-
+				+ "WHERE localidadesNombre.toLowerCase().indexOf(:localidadesNombre) >= 0 "),
+		@javax.jdo.annotations.Query(name = "buscarPorProvincia", language = "JDOQL", value = "SELECT "
+				+ "FROM com.leanGomez.modules.simple.dom.localidad.Localidad " + "WHERE localidadProvincia == :localidadProvincia"),
 		@javax.jdo.annotations.Query(name = "listarActivos", language = "JDOQL", value = "SELECT "
 				+ "FROM com.leanGomez.modules.simple.dom.localidad.Localidad " + "WHERE localidadActivo == true "),
 		@javax.jdo.annotations.Query(name = "listarInactivos", language = "JDOQL", value = "SELECT "
 				+ "FROM com.leanGomez.modules.simple.dom.localidad.Localidad " + "WHERE localidadActivo == false ") })
-@javax.jdo.annotations.Unique(name = "localidad_localidadNombre_UNQ", members = { "localidadNombre" })
+@javax.jdo.annotations.Unique(name = "Localidades_localidadesNombre_UNQ", members = { "localidadesNombre" , "localidadProvincia"})
 @DomainObject(publishing = Publishing.ENABLED, auditing = Auditing.ENABLED)
 public class Localidad implements Comparable<Localidad> {
 	// region > title
 	public TranslatableString title() {
 		return TranslatableString.tr("{name}", "name",
-				getlocalidadNombre() + " - " + this.getLocalidadProvincia().getProvinciaNombre());
+				getLocalidadesNombre() + " - " + this.getLocalidadProvincia().getProvinciaNombre());
 	}
 	// endregion
 
@@ -66,7 +67,7 @@ public class Localidad implements Comparable<Localidad> {
 
 	// Constructor
 	public Localidad(String localidadNombre, Provincia localidadProvincia) {
-		setlocalidadNombre(localidadNombre);
+		setLocalidadesNombre(localidadNombre);
 		setLocalidadProvincia(localidadProvincia);
 		this.localidadActivo = true;
 	}
@@ -74,20 +75,15 @@ public class Localidad implements Comparable<Localidad> {
 	@javax.jdo.annotations.Column(allowsNull = "false", length = NAME_LENGTH)
 	@Property(editing = Editing.DISABLED)
 	@PropertyLayout(named = "Nombre")
-	private String localidadNombre;
+	private String localidadesNombre;
 
-	public String getlocalidadNombre() {
-		return localidadNombre;
+	public String getLocalidadesNombre() {
+		return localidadesNombre;
 	}
 
-	public void setlocalidadNombre(String localidadNombre) {
-		this.localidadNombre = localidadNombre;
+	public void setLocalidadesNombre(String localidadesNombre) {
+		this.localidadesNombre = localidadesNombre;
 	}
-
-	@javax.jdo.annotations.Column(allowsNull = "false")
-	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Activo")
-	private boolean localidadActivo;
 
 	@javax.jdo.annotations.Column(allowsNull = "false", name = "provinciaId")
 	@Property(editing = Editing.DISABLED)
@@ -102,7 +98,10 @@ public class Localidad implements Comparable<Localidad> {
 		this.localidadProvincia = localidadProvincia;
 	}
 
-	// endregion
+	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Property(editing = Editing.DISABLED)
+	@PropertyLayout(named = "Activo")
+	private boolean localidadActivo;
 
 	public boolean getLocalidadActivo() {
 		return localidadActivo;
@@ -120,34 +119,34 @@ public class Localidad implements Comparable<Localidad> {
 		setLocalidadActivo(false);
 	}
 
-	public Localidad actualizarProvincia(@ParameterLayout(named = "Provincia") final Provincia name) {
+	public Localidad modificarProvincia(@ParameterLayout(named = "Provincia") final Provincia name) {
 		setLocalidadProvincia(name);
 		return this;
 	}
 
-	public List<Provincia> choices0ActualizarProvincia() {
+	public List<Provincia> choices0ModificarProvincia() {
 		return provinciaRepository.listarActivos();
 	}
 
-	public Provincia default0ActualizarProvincia() {
+	public Provincia default0ModificarProvincia() {
 		return getLocalidadProvincia();
 	}
 
-	public Localidad actualizarNombre(@ParameterLayout(named = "Nombre") final String localidadNombre) {
-		setlocalidadNombre(localidadNombre);
+	public Localidad modificarNombre(@ParameterLayout(named = "Nombre") final String localidadNombre) {
+		setLocalidadesNombre(localidadNombre);
 		return this;
 	}
 
-	public String default0ActualizarNombre() {
-		return getlocalidadNombre();
+	public String default0ModificarNombre() {
+		return getLocalidadesNombre();
 	}
 
-	public Localidad actualizarActivo(@ParameterLayout(named = "Activo") final boolean localidadActivo) {
+	public Localidad modificarActivo(@ParameterLayout(named = "Activo") final boolean localidadActivo) {
 		setLocalidadActivo(localidadActivo);
 		return this;
 	}
 
-	public boolean default0ActualizarActivo() {
+	public boolean default0ModificarActivo() {
 		return getLocalidadActivo();
 	}
 
@@ -156,35 +155,35 @@ public class Localidad implements Comparable<Localidad> {
 	// region > toString, compareTo
 	@Override
 	public String toString() {
-		return getlocalidadNombre();
+		return getLocalidadesNombre();
 	}
 
 	@Override
 	public int compareTo(final Localidad localidad) {
-		return this.localidadNombre.compareTo(localidad.localidadNombre);
+		return this.localidadesNombre.compareTo(localidad.localidadesNombre);
 	}
 	// endregion
 
 	// acciones
 	@Action(semantics = SemanticsOf.SAFE)
-	@ActionLayout(named = "Listar todas las localidades")
+	@ActionLayout(named = "Listar todas las Localidades")
 	@MemberOrder(sequence = "2")
 	public List<Localidad> listar() {
-		return localidadRepository.listar();
+		return localidadesRepository.listar();
 	}
 
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(named = "Listar las Localidades Activas")
 	@MemberOrder(sequence = "3")
 	public List<Localidad> listarActivos() {
-		return localidadRepository.listarActivos();
+		return localidadesRepository.listarActivos();
 	}
 
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(named = "Listar las Localidades Inactivas")
 	@MemberOrder(sequence = "4")
 	public List<Localidad> listarInactivos() {
-		return localidadRepository.listarInactivos();
+		return localidadesRepository.listarInactivos();
 	}
 	// region > injected dependencies
 
@@ -201,7 +200,7 @@ public class Localidad implements Comparable<Localidad> {
 	MessageService messageService;
 
 	@Inject
-	LocalidadRepository localidadRepository;
+	LocalidadRepository localidadesRepository;
 
 	// endregion
 }

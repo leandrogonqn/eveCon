@@ -24,8 +24,8 @@ import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.services.i18n.TranslatableString;
 
-import com.leanGomez.modules.simple.dom.impl.SimpleObject;
-import com.leanGomez.modules.simple.dom.impl.SimpleObjectRepository;
+import com.leanGomez.modules.simple.dom.cliente.ClientePersonaFisica;
+import com.leanGomez.modules.simple.dom.cliente.ClientePersonaFisicaRepository;
 
 @DomainObject(
         nature = Nature.VIEW_MODEL,
@@ -37,10 +37,10 @@ public class HomePageViewModel {
         return TranslatableString.tr("{num} objects", "num", getObjects().size());
     }
 
-    public List<SimpleObject> getObjects() {
-        return simpleObjectRepository.listAll();
+    public List<ClientePersonaFisica> getObjects() {
+        return clientePersonaFisicaRepository.listar();
     }
 
     @javax.inject.Inject
-    SimpleObjectRepository simpleObjectRepository;
+    ClientePersonaFisicaRepository clientePersonaFisicaRepository;
 }

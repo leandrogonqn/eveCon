@@ -25,8 +25,6 @@ import javax.inject.Inject;
 import org.junit.Test;
 
 import com.leanGomez.application.fixture.teardown.DomainAppTearDown;
-import com.leanGomez.modules.simple.dom.impl.SimpleObject;
-import com.leanGomez.modules.simple.dom.impl.SimpleObjectMenu;
 
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.xactn.TransactionService;
@@ -35,77 +33,77 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Smoke_IntegTest extends DomainAppIntegTestAbstract {
 
-    @Inject
-    FixtureScripts fixtureScripts;
-    @Inject
-    TransactionService transactionService;
-    @Inject
-    SimpleObjectMenu menu;
-
-    @Test
-    public void create() throws Exception {
-
-        // given
-        DomainAppTearDown fs = new DomainAppTearDown();
-        fixtureScripts.runFixtureScript(fs, null);
-        transactionService.nextTransaction();
-
-
-        // when
-        List<SimpleObject> all = wrap(menu).listAll();
-
-        // then
-        assertThat(all).isEmpty();
-
-
-
-        // when
-        final SimpleObject fred = wrap(menu).create("Fred");
-        transactionService.flushTransaction();
-
-        // then
-        all = wrap(menu).listAll();
-        assertThat(all).hasSize(1);
-        assertThat(all).contains(fred);
-
-
-
-        // when
-        final SimpleObject bill = wrap(menu).create("Bill");
-        transactionService.flushTransaction();
-
-        // then
-        all = wrap(menu).listAll();
-        assertThat(all).hasSize(2);
-        assertThat(all).contains(fred, bill);
-
-
-
-        // when
-        wrap(fred).updateName("Freddy");
-        transactionService.flushTransaction();
-
-        // then
-        assertThat(wrap(fred).getName()).isEqualTo("Freddy");
-
-
-
-        // when
-        wrap(fred).setNotes("These are some notes");
-
-        // then
-        assertThat(wrap(fred).getNotes()).isEqualTo("These are some notes");
-
-
-        // when
-        wrap(fred).delete();
-        transactionService.flushTransaction();
-
-
-        all = wrap(menu).listAll();
-        assertThat(all).hasSize(1);
-
-    }
+//    @Inject
+//    FixtureScripts fixtureScripts;
+//    @Inject
+//    TransactionService transactionService;
+//    @Inject
+//    SimpleObjectMenu menu;
+//
+//    @Test
+//    public void create() throws Exception {
+//
+//        // given
+//        DomainAppTearDown fs = new DomainAppTearDown();
+//        fixtureScripts.runFixtureScript(fs, null);
+//        transactionService.nextTransaction();
+//
+//
+//        // when
+//        List<SimpleObject> all = wrap(menu).listAll();
+//
+//        // then
+//        assertThat(all).isEmpty();
+//
+//
+//
+//        // when
+//        final SimpleObject fred = wrap(menu).create("Fred");
+//        transactionService.flushTransaction();
+//
+//        // then
+//        all = wrap(menu).listAll();
+//        assertThat(all).hasSize(1);
+//        assertThat(all).contains(fred);
+//
+//
+//
+//        // when
+//        final SimpleObject bill = wrap(menu).create("Bill");
+//        transactionService.flushTransaction();
+//
+//        // then
+//        all = wrap(menu).listAll();
+//        assertThat(all).hasSize(2);
+//        assertThat(all).contains(fred, bill);
+//
+//
+//
+//        // when
+//        wrap(fred).updateName("Freddy");
+//        transactionService.flushTransaction();
+//
+//        // then
+//        assertThat(wrap(fred).getName()).isEqualTo("Freddy");
+//
+//
+//
+//        // when
+//        wrap(fred).setNotes("These are some notes");
+//
+//        // then
+//        assertThat(wrap(fred).getNotes()).isEqualTo("These are some notes");
+//
+//
+//        // when
+//        wrap(fred).delete();
+//        transactionService.flushTransaction();
+//
+//
+//        all = wrap(menu).listAll();
+//        assertThat(all).hasSize(1);
+//
+//    }
 
 }
 

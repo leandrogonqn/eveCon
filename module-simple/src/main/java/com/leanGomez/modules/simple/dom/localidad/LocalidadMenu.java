@@ -49,7 +49,7 @@ public class LocalidadMenu {
 	}
 
 	public List<Provincia> choices1Crear() {
-		return provinciaRepository.listarActivos();
+		return provinciasRepository.listarActivos();
 	}
 
 	@MemberOrder(sequence = "1.2")
@@ -58,11 +58,22 @@ public class LocalidadMenu {
 			@ParameterLayout(named = "Provincia") final Provincia localidadProvincia) {
 		return localidadesRepository.crear(localidadNombre, localidadProvincia);
 	}
+	
+	@Action(semantics = SemanticsOf.SAFE)
+	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Buscar localidades por provincia")
+	@MemberOrder(sequence = "2")
+	public List<Localidad> buscarPorProvincia(@ParameterLayout(named = "Provincia") final Provincia localidadProvincia) {
+		return localidadesRepository.buscarPorProvincia(localidadProvincia);
+	}
+
+	public List<Provincia> choices0BuscarPorProvincia() {
+		return provinciasRepository.listarActivos();
+	}
 
 	@javax.inject.Inject
 	LocalidadRepository localidadesRepository;
 
 	@javax.inject.Inject
-	ProvinciaRepository provinciaRepository;
+	ProvinciaRepository provinciasRepository;
 
 }

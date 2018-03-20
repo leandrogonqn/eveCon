@@ -16,7 +16,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 @DomainServiceLayout(named = "Extras", menuOrder = "10.5")
 public class ProvinciaMenu {
 	@Action(semantics = SemanticsOf.SAFE)
-	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Listar provincias")
+	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Listar todas las provincias")
 	@MemberOrder(sequence = "2")
 	public List<Provincia> listar() {
 		return provinciasRepository.listar();

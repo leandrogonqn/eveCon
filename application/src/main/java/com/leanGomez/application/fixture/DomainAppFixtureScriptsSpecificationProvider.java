@@ -24,7 +24,7 @@ import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecification;
 import org.apache.isis.applib.services.fixturespec.FixtureScriptsSpecificationProvider;
 
-import com.leanGomez.application.fixture.scenarios.DomainAppDemo;
+import com.leanGomez.application.fixture.scenarios.ProvinciaFixture;
 
 /**
  * Specifies where to find fixtures, and other settings.
@@ -33,14 +33,13 @@ import com.leanGomez.application.fixture.scenarios.DomainAppDemo;
         nature = NatureOfService.DOMAIN
 )
 public class DomainAppFixtureScriptsSpecificationProvider implements FixtureScriptsSpecificationProvider {
-    @Override
     public FixtureScriptsSpecification getSpecification() {
         return FixtureScriptsSpecification
                 .builder(DomainAppFixtureScriptsSpecificationProvider.class)
                 .with(FixtureScripts.MultipleExecutionStrategy.EXECUTE)
-                .withRunScriptDefault(DomainAppDemo.class)
+                .withRunScriptDefault(ProvinciaFixture.class)
                 .withRunScriptDropDown(FixtureScriptsSpecification.DropDownPolicy.CHOICES)
-                .withRecreate(DomainAppDemo.class)
+                .withRecreate(ProvinciaFixture.class)
                 .build();
     }
 }

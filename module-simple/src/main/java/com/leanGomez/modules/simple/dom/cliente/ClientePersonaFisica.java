@@ -54,7 +54,7 @@ public class ClientePersonaFisica extends Cliente {
 	public ClientePersonaFisica(String personaNombre, Localidad personaLocalidad, 
 			String personaDireccion, String personaTelefono, String personaMail,
 			Sexo clienteSexo, Date clienteFechaNacimiento, 
-			TipoDeDocumento clienteTipoDocumento, int clienteNumeroDocumento) {
+			TipoDeDocumento clienteTipoDocumento, int clienteNumeroDocumento, boolean clienteNotificacionCumpleanios) {
 		super();
 		setClienteSexo(clienteSexo);
 		setClienteFechaNacimiento(clienteFechaNacimiento);
@@ -65,6 +65,7 @@ public class ClientePersonaFisica extends Cliente {
 		setPersonaDireccion(personaDireccion);
 		setPersonaTelefono(personaTelefono);
 		setPersonaMail(personaMail);
+		setClienteNotificacionCumpleanios(clienteNotificacionCumpleanios);
 		setPersonaActivo(true);
 		setPersonaCuitCuil(GenerarCuit.generar(clienteSexo, clienteNumeroDocumento));
 	}
@@ -82,7 +83,7 @@ public class ClientePersonaFisica extends Cliente {
 		this.clienteSexo = clienteSexo;
 	}
 	
-	@javax.jdo.annotations.Column(allowsNull = "false")
+	@javax.jdo.annotations.Column(allowsNull = "true")
     @Property(
             editing = Editing.DISABLED
     )
@@ -147,86 +148,86 @@ public class ClientePersonaFisica extends Cliente {
 		this.clienteAviso = clienteAviso;
 	}
 	
-	public Cliente actualizarLocalidad(@ParameterLayout(named = "Localidad") final Localidad name) {
+	public Cliente modificarLocalidad(@ParameterLayout(named = "Localidad") final Localidad name) {
 		setPersonaLocalidad(name);
 		return this;
 	}
 
-	public List<Localidad> choices0ActualizarLocalidad() {
+	public List<Localidad> choices0ModificarLocalidad() {
 		return localidadRepository.listarActivos();
 	}
 
-	public Localidad default0ActualizarLocalidad() {
+	public Localidad default0ModificarLocalidad() {
 		return getPersonaLocalidad();
 	}
 
-	public Cliente actualizarSexo(@ParameterLayout(named = "Sexo") final Sexo clienteSexo) {
+	public Cliente modificarSexo(@ParameterLayout(named = "Sexo") final Sexo clienteSexo) {
 		setPersonaCuitCuil(GenerarCuit.generar(clienteSexo, getClienteNumeroDocumento()));
 		setClienteSexo(clienteSexo);
 		return this;
 	}
 
-	public Cliente actualizarDni(@ParameterLayout(named = "Numero de Documento") final int clienteDni) {
+	public Cliente modificarDni(@ParameterLayout(named = "Numero de Documento") final int clienteDni) {
 		setPersonaCuitCuil(GenerarCuit.generar(getClienteSexo(), clienteDni));
 		setClienteNumeroDocumento(clienteDni);
 		return this;
 	}
 
-	public Sexo default0ActualizarSexo() {
+	public Sexo default0ModificarSexo() {
 		return getClienteSexo();
 	}
 
-	public int default0ActualizarDni() {
+	public int default0ModificarDni() {
 		return getClienteNumeroDocumento();
 	}
 
-	public Cliente actualizarNombre(@ParameterLayout(named = "Nombre") final String personaNombre) {
+	public Cliente modificarNombre(@ParameterLayout(named = "Nombre") final String personaNombre) {
 		setPersonaNombre(personaNombre);
 		return this;
 	}
 
-	public String default0ActualizarNombre() {
+	public String default0ModificarNombre() {
 		return getPersonaNombre();
 	}
 
-	public Cliente actualizarTipoDocumento(
+	public Cliente modificarTipoDocumento(
 			@ParameterLayout(named = "Tipo de Documento") final TipoDeDocumento clienteTipoDocumento) {
 		setClienteTipoDocumento(clienteTipoDocumento);
 		return this;
 	}
 
-	public TipoDeDocumento default0ActualizarTipoDocumento() {
+	public TipoDeDocumento default0ModificarTipoDocumento() {
 		return getClienteTipoDocumento();
 	}
 
-	public Cliente actualizarDireccion(@ParameterLayout(named = "Direccion") final String personaDireccion) {
+	public Cliente modificarDireccion(@ParameterLayout(named = "Direccion") final String personaDireccion) {
 		setPersonaDireccion(personaDireccion);
 		return this;
 	}
 
-	public String default0ActualizarDireccion() {
+	public String default0ModificarDireccion() {
 		return getPersonaDireccion();
 	}
 
-	public Cliente actualizarTelefono(@ParameterLayout(named = "Telefono") final String personaTelefono) {
+	public Cliente modificarTelefono(@ParameterLayout(named = "Telefono") final String personaTelefono) {
 		setPersonaTelefono(personaTelefono);
 		return this;
 	}
 
-	public String default0ActualizarTelefono() {
+	public String default0ModificarTelefono() {
 		return getPersonaTelefono();
 	}
 
-	public Cliente actualizarMail(@ParameterLayout(named = "Mail") final String personaMail) {
+	public Cliente modificarMail(@ParameterLayout(named = "Mail") final String personaMail) {
 		setPersonaMail(personaMail);
 		return this;
 	}
 
-	public String default0ActualizarMail() {
+	public String default0ModificarMail() {
 		return getPersonaMail();
 	}
 
-	public Cliente actualizarFechaNacimiento(
+	public Cliente modificarFechaNacimiento(
 			@Nullable @ParameterLayout(named = "Fecha de Nacimiento") @Parameter(optionality = Optionality.OPTIONAL) final Date clienteFechaNacimiento) {
 		if ((clienteFechaNacimiento == null)) {
 			setClienteNotificacionCumpleanios(false);
@@ -235,33 +236,33 @@ public class ClientePersonaFisica extends Cliente {
 		return this;
 	}
 
-	public Date default0ActualizarFechaNacimiento() {
+	public Date default0ModificarFechaNacimiento() {
 		return getClienteFechaNacimiento();
 	}
 
-	public Cliente actualizarNotificacionCumpleanios(
+	public Cliente modificarNotificacionCumpleanios(
 			@ParameterLayout(named = "Notificacion Cumpleaños") final boolean clienteNotificacionCumpleanios) {
 		setClienteNotificacionCumpleanios(clienteNotificacionCumpleanios);
 		return this;
 	}
 
-	public String validateActualizarNotificacionCumpleanios(final boolean clienteNotificacionCumpleanios) {
+	public String validateModificarNotificacionCumpleanios(final boolean clienteNotificacionCumpleanios) {
 		if ((clienteFechaNacimiento == null) & (clienteNotificacionCumpleanios == true)) {
 			return "Se necesita cargar fecha de nacimiento para poder cargar el cumpleaños";
 		}
 		return "";
 	}
 
-	public boolean default0ActualizarNotificacionCumpleanios() {
+	public boolean default0ModificarNotificacionCumpleanios() {
 		return getClienteNotificacionCumpleanios();
 	}
 
-	public Cliente actualizarActivo(@ParameterLayout(named = "Activo") final boolean personaActivo) {
+	public Cliente modificarActivo(@ParameterLayout(named = "Activo") final boolean personaActivo) {
 		setPersonaActivo(personaActivo);
 		return this;
 	}
 
-	public boolean default0ActualizarActivo() {
+	public boolean default0ModificarActivo() {
 		return isPersonaActivo();
 	}
 

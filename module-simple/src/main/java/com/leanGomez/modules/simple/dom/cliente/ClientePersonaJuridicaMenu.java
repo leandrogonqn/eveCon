@@ -39,10 +39,10 @@ public class ClientePersonaJuridicaMenu {
 	public Cliente crear(@ParameterLayout(named = "Razon Social") final String personaNombre,
 			@ParameterLayout(named = "Cuit") final String personaCuitCuil,
 			@ParameterLayout(named = "Localidad") final Localidad personaLocalidad,
-			@ParameterLayout(named = "Dirección") final String personaDireccion,
+			@Nullable @ParameterLayout(named = "Dirección") @Parameter(optionality=Optionality.OPTIONAL) final String personaDireccion,
 			@Nullable @ParameterLayout(named = "Teléfono") @Parameter(optionality = Optionality.OPTIONAL) final String personaTelefono,
 			@Nullable @ParameterLayout(named = "E-Mail") @Parameter(optionality = Optionality.OPTIONAL) final String personaMail) {
-		return clientePersonaJuridicaRepository.crear(personaNombre, personaLocalidad, personaDireccion, personaTelefono, personaMail, personaCuitCuil);
+		return clientePersonaJuridicaRepository.crear(personaNombre, personaCuitCuil, personaLocalidad, personaDireccion, personaTelefono, personaMail);
 				
 	}
 	
