@@ -33,7 +33,6 @@ import com.leanGomez.modules.simple.dom.localidad.LocalidadRepository;
 	@javax.jdo.annotations.Query(name = "buscarPorNombre", language = "JDOQL", value = "SELECT "
 			+ "FROM com.leanGomez.modules.simple.dom.provincia.Provincia "
 			+ "WHERE provinciaNombre.toLowerCase().indexOf(:provinciaNombre) >= 0 "),
-
 	@javax.jdo.annotations.Query(name = "listarActivos", language = "JDOQL", value = "SELECT "
 			+ "FROM com.leanGomez.modules.simple.dom.provincia.Provincia " + "WHERE provinciaActivo == true "),
 	@javax.jdo.annotations.Query(name = "listarInactivos", language = "JDOQL", value = "SELECT "
