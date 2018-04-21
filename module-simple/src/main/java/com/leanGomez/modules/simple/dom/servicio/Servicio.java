@@ -70,6 +70,12 @@ public class Servicio implements Comparable<Servicio>{
 		this.servicioObservaciones = servicioObservaciones;
 	}
 	
+	public Double getPrecioActualServicio() {
+		Date hoy = new Date();
+		Double a = precioHistoricoServicioRepository.mostrarPrecioPorFecha(this, hoy);
+		return a;
+	}
+	
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
 	@PropertyLayout(named = "Activo",hidden=Where.ALL_TABLES)
@@ -119,6 +125,10 @@ public class Servicio implements Comparable<Servicio>{
 		}
 		precioHistoricoServicioRepository.crear(this, servicioPrecio);
 		return this;
+	}
+	
+	public Double default0ModificarPrecio() {
+		return getPrecioActualServicio();
 	}
 
 	public Servicio modificarActivo(@ParameterLayout(named = "Activo") final boolean servicioActivo) {

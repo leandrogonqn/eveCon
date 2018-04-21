@@ -1,6 +1,7 @@
 package com.leanGomez.modules.simple.dom.evento;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.jdo.annotations.Join;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Auditing;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -32,9 +34,11 @@ import com.leanGomez.modules.simple.dom.cliente.ClienteRepository;
 import com.leanGomez.modules.simple.dom.localidad.LocalidadRepository;
 import com.leanGomez.modules.simple.dom.pagodecliente.PagoDeCliente;
 import com.leanGomez.modules.simple.dom.pagodecliente.PagoDeClienteRepository;
+import com.leanGomez.modules.simple.dom.preciohistoricoservicio.PrecioHistoricoServicioRepository;
 import com.leanGomez.modules.simple.dom.salon.Salon;
 import com.leanGomez.modules.simple.dom.salon.SalonRepository;
 import com.leanGomez.modules.simple.dom.servicio.Servicio;
+import com.leanGomez.modules.simple.dom.servicio.ServicioConPrecio;
 import com.leanGomez.modules.simple.dom.servicio.ServicioRepository;
 import com.leanGomez.modules.simple.dom.tipodeevento.TipoDeEvento;
 import com.leanGomez.modules.simple.dom.tipodeevento.TipoDeEventoRepository;
@@ -71,6 +75,8 @@ public class Evento implements Comparable<Evento>{
 		this.eventoHoraComienzo= eventoHoraComienzo;
 		this.eventoHoraFinalizacion= eventoHoraFinalizacion;
 		this.eventoHoraComienzoArmado= eventoHoraComienzoArmado;
+		this.eventoDescuento = 0.0;
+		this.eventoRecargo = 0.0;
 		this.eventoEleccionMusica=eventoEleccionMusica;
 		this.eventoActivo = true;
 	}
@@ -188,6 +194,7 @@ public class Evento implements Comparable<Evento>{
 	@Join
 	@javax.jdo.annotations.Column(allowsNull = "true")
 	@Property(editing = Editing.DISABLED, hidden=Where.EVERYWHERE)
+	@CollectionLayout(hidden=Where.EVERYWHERE)
 	private List<Servicio> listaServicio;
 	public List<Servicio> getListaServicio() {
 		return listaServicio;
@@ -197,10 +204,17 @@ public class Evento implements Comparable<Evento>{
 	}
 	
 	public Double getEventoPrecioServicios() {
-		return 100.0;
+		Double a = 0.0;
+		for(int indice = 0;indice<listaServicio.size();indice++)
+		{
+			Servicio s = listaServicio.get(indice);
+			Double p = precioHistoricoServicioRepository.mostrarPrecioPorFecha(s, this.eventoFechaPresupuesto);
+			a = a + p;
+		}
+		return a;
 	}
 	
-	@javax.jdo.annotations.Column(allowsNull = "true")
+	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
 	@PropertyLayout(named = "Descuento")
 	private Double eventoDescuento;
@@ -211,7 +225,7 @@ public class Evento implements Comparable<Evento>{
 		this.eventoDescuento = eventoDescuento;
 	}
 	
-	@javax.jdo.annotations.Column(allowsNull = "true")
+	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
 	@PropertyLayout(named = "Recargo")
 	private Double eventoRecargo;
@@ -223,7 +237,9 @@ public class Evento implements Comparable<Evento>{
 	}
 	
 	public Double getEventoPrecioFinal() {
-		return 100.0;
+		Double a;
+		a = getEventoPrecioServicios()-getEventoDescuento()+getEventoRecargo();
+		return a;
 	}
 		
 	@Join
@@ -236,6 +252,15 @@ public class Evento implements Comparable<Evento>{
 	}
 	public void setEventoPagoDeCliente(List<PagoDeCliente> eventoPagoDeCliente) {
 		this.eventoPagoDeCliente = eventoPagoDeCliente;
+	}
+	
+	public Double getSaldoRestante() {
+		Double a = getEventoPrecioFinal();
+		for(int indice = 0;indice<getEventoPagoDeCliente().size();indice++)
+		{
+			a = a - getEventoPagoDeCliente().get(indice).getPagoDeClienteMonto();
+		}
+		return a;
 	}
 	
 	@javax.jdo.annotations.Column(allowsNull = "true")
@@ -259,12 +284,34 @@ public class Evento implements Comparable<Evento>{
 	public void setEventoActivo(boolean eventoActivo) {
 		this.eventoActivo = eventoActivo;
 	}
+	
+	public List<ServicioConPrecio> getListaServicioConPrecio(){
+		List<ServicioConPrecio> listaServicioConPrecio = new ArrayList<>();
+		for(int indice = 0;indice<listaServicio.size();indice++)
+		{
+			Servicio s = listaServicio.get(indice);
+			Double p = precioHistoricoServicioRepository.mostrarPrecioPorFecha(s, this.eventoFechaPresupuesto);
+			listaServicioConPrecio.add(new ServicioConPrecio(s, p));
+		    
+		}
+
+		return listaServicioConPrecio;
+	}
 
 	@Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
 	public void borrarEvento() {
 		final String title = titleService.titleOf(this);
 		messageService.informUser(String.format("'%s' deleted", title));
 		setEventoActivo(false);
+	}
+
+	public Evento modificarEventoFechaPresupuesto(@ParameterLayout(named = "Fecha Presupuesto") final Date eventoFechaPresupuesto) {
+		setEventoFechaPresupuesto(eventoFechaPresupuesto);
+		return this;
+	}
+
+	public Date default0ModificarEventoFechaPresupuesto() {
+		return getEventoFechaPresupuesto();
 	}
 	
 	public Evento modificarEventoFechaDelEvento(@ParameterLayout(named = "Fecha del Evento") final Date eventoFechaDelEvento) {
@@ -469,6 +516,21 @@ public class Evento implements Comparable<Evento>{
 		return this;
 	}
 	
+	@ActionLayout(named = "Quitar Pago")
+	public Evento quitarPago(@ParameterLayout(named = "Pago") PagoDeCliente pagoDeCliente) {
+		Iterator<PagoDeCliente> it = getEventoPagoDeCliente().iterator();
+		while (it.hasNext()) {
+			PagoDeCliente lista = it.next();
+			if (lista.equals(pagoDeCliente))
+				it.remove();
+		}
+		return this;
+	}
+	
+	public List<PagoDeCliente> choices0QuitarPago() {
+		return getEventoPagoDeCliente();
+	}
+	
 //	@ActionLayout(named = "Listar Localidades de esta Evento")
 //	@MemberOrder(sequence = "5")
 //	public List<Localidad> listarEvento(){
@@ -502,5 +564,8 @@ public class Evento implements Comparable<Evento>{
 	
 	@Inject
 	PagoDeClienteRepository pagoDeClienteRepository;
+	
+	@Inject
+	PrecioHistoricoServicioRepository precioHistoricoServicioRepository;
 	
 }

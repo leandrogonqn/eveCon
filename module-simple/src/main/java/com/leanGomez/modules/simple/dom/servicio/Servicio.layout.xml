@@ -35,9 +35,9 @@
                                 <c:property id="servicioObservaciones" namedEscaped="true">
                                 <c:action id="modificarObservaciones" position="RIGHT"></c:action>
                                 </c:property>              
-<!--                                 <c:property id="servicioPrecio" namedEscaped="true">
+                                 <c:property id="precioActualServicio" namedEscaped="true">
                                 <c:action id="modificarPrecio" position="RIGHT"></c:action>
-                                </c:property>                                                   -->
+                                </c:property>                                                   
                                 <c:property id="servicioActivo" namedEscaped="true">
                                 <c:action id="modificarActivo" position="RIGHT"></c:action>
                                 </c:property>

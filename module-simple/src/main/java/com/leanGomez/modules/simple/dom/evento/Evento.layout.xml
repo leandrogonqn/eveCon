@@ -29,6 +29,9 @@
                         <bs3:col span="12">
                             <c:fieldSet name="Nombre">
                                 <c:action id="borrarProvincia"/>
+                                <c:property id="eventoFechaPresupuesto" namedEscaped="true">
+                                <c:action id="modificarEventoFechaPresupuesto" position="RIGHT"></c:action>
+                                </c:property>		
                                 <c:property id="eventoFechaDelEvento" namedEscaped="true">
                                 <c:action id="modificarEventoFechaDelEvento" position="RIGHT"></c:action>
                                 </c:property>
@@ -59,10 +62,14 @@
                                 <c:property id="eventoPrecioServicios" namedEscaped="true">
                                 </c:property>
                                 <c:property id="eventoDescuento" namedEscaped="true">
+                                <c:action id="modificarEventoDescuento" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="eventoRecargo" namedEscaped="true">
+                                <c:action id="modificarEventoRecargo" position="RIGHT"></c:action>
                                 </c:property>
                                 <c:property id="eventoPrecioFinal" namedEscaped="true">
+                                </c:property>
+                                <c:property id="saldoRestante" namedEscaped="true">
                                 </c:property>
                                 <c:property id="eventoEleccionMusica" namedEscaped="true">
                                 <c:action id="modificarEventoEleccionMusica" position="RIGHT"></c:action>
@@ -103,7 +110,7 @@
                         	<c:action id="quitarServicio"/>
 				        </bs3:col>
 				        <bs3:col span="12">    
-                            <c:collection defaultView="table" id="listaServicioPrecioActualizado" />
+                            <c:collection defaultView="table" id="listaServicioConPrecio" />
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
@@ -111,6 +118,7 @@
                     <bs3:row>
                         <bs3:col span="12" size="MD">
                         	<c:action id="crearPago"/>
+                        	<c:action id="quitarPago"/>
 				        </bs3:col>
 				        <bs3:col span="12">    
                             <c:collection defaultView="table" id="eventoPagoDeCliente" />
