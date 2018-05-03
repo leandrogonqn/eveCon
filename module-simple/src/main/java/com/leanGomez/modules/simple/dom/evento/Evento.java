@@ -16,6 +16,7 @@ import org.apache.isis.applib.annotation.Auditing;
 import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.InvokeOn;
 import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
@@ -31,6 +32,7 @@ import org.apache.isis.applib.services.title.TitleService;
 
 import com.leanGomez.modules.simple.dom.cliente.Cliente;
 import com.leanGomez.modules.simple.dom.cliente.ClienteRepository;
+import com.leanGomez.modules.simple.dom.estado.Estado;
 import com.leanGomez.modules.simple.dom.localidad.LocalidadRepository;
 import com.leanGomez.modules.simple.dom.pagodecliente.PagoDeCliente;
 import com.leanGomez.modules.simple.dom.pagodecliente.PagoDeClienteRepository;
@@ -46,10 +48,8 @@ import com.leanGomez.modules.simple.dom.tipodeevento.TipoDeEventoRepository;
 @javax.jdo.annotations.PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "simple", table = "Evento")
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "eventoId")
 @javax.jdo.annotations.Queries({
-	@javax.jdo.annotations.Query(name = "listarActivos", language = "JDOQL", value = "SELECT "
-			+ "FROM com.leanGomez.modules.simple.dom.evento.Evento " + "WHERE eventoActivo == true "),
-	@javax.jdo.annotations.Query(name = "listarInactivos", language = "JDOQL", value = "SELECT "
-			+ "FROM com.leanGomez.modules.simple.dom.evento.Evento " + "WHERE eventoActivo == false ") })
+	@javax.jdo.annotations.Query(name = "actualizarEstado", language = "JDOQL", value = "SELECT "
+			+ "FROM com.leanGomez.modules.simple.dom.evento.Evento " + "WHERE eventoFechaDelEvento >= :hoy AND eventoEstado == :eventoEstado")})
 @DomainObject(publishing = Publishing.ENABLED, auditing = Auditing.ENABLED)
 public class Evento implements Comparable<Evento>{
 
@@ -60,6 +60,12 @@ public class Evento implements Comparable<Evento>{
 		+ " - Cliente: " + this.getEventoCliente().getPersonaNombre());
 	}
 	// endregion
+	
+	public String cssClass() {
+		String a;
+		a = eventoEstado.toString();
+		return a;
+	}
 
 	public Evento(Date eventoFechaPresupuesto ,Date eventoFechaDelEvento, String eventoNombreAgasajado, Cliente eventoCliente, TipoDeEvento eventoTipoDeEvento,
 			Salon eventoSalon, Integer eventoCantidadPersonas, String eventoHoraComienzo, String eventoHoraFinalizacion,
@@ -78,12 +84,12 @@ public class Evento implements Comparable<Evento>{
 		this.eventoDescuento = 0.0;
 		this.eventoRecargo = 0.0;
 		this.eventoEleccionMusica=eventoEleccionMusica;
-		this.eventoActivo = true;
+		this.eventoEstado = Estado.presupuestado;
 	}
 	
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Fecha Presupuesto")
+	@PropertyLayout(named = "Fecha Presupuesto",hidden=Where.ALL_TABLES)
 	private Date eventoFechaPresupuesto;
 	public Date getEventoFechaPresupuesto() {
 		return eventoFechaPresupuesto;
@@ -171,7 +177,7 @@ public class Evento implements Comparable<Evento>{
 	
 	@javax.jdo.annotations.Column(allowsNull = "true")
 	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Hora finalizacion")
+	@PropertyLayout(named = "Hora finalizacion",hidden=Where.ALL_TABLES)
 	private String eventoHoraFinalizacion;
 	public String getEventoHoraFinalizacion() {
 		return eventoHoraFinalizacion;
@@ -182,7 +188,7 @@ public class Evento implements Comparable<Evento>{
 	
 	@javax.jdo.annotations.Column(allowsNull = "true")
 	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Hora comienzo armado")
+	@PropertyLayout(named = "Hora comienzo armado",hidden=Where.ALL_TABLES)
 	private String eventoHoraComienzoArmado;
 	public String getEventoHoraComienzoArmado() {
 		return eventoHoraComienzoArmado;
@@ -203,6 +209,7 @@ public class Evento implements Comparable<Evento>{
 		this.listaServicio = listaServicio;
 	}
 	
+	@ActionLayout(named="Precio Servicios", hidden=Where.ALL_TABLES)	 
 	public Double getEventoPrecioServicios() {
 		Double a = 0.0;
 		for(int indice = 0;indice<listaServicio.size();indice++)
@@ -216,7 +223,7 @@ public class Evento implements Comparable<Evento>{
 	
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Descuento")
+	@PropertyLayout(named = "Descuento",hidden=Where.ALL_TABLES)
 	private Double eventoDescuento;
 	public Double getEventoDescuento() {
 		return eventoDescuento;
@@ -227,7 +234,7 @@ public class Evento implements Comparable<Evento>{
 	
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Recargo")
+	@PropertyLayout(named = "Recargo",hidden=Where.ALL_TABLES)
 	private Double eventoRecargo;
 	public Double getEventoRecargo() {
 		return eventoRecargo;
@@ -236,6 +243,7 @@ public class Evento implements Comparable<Evento>{
 		this.eventoRecargo = eventoRecargo;
 	}
 	
+	@ActionLayout(named="Precio Final")	
 	public Double getEventoPrecioFinal() {
 		Double a;
 		a = getEventoPrecioServicios()-getEventoDescuento()+getEventoRecargo();
@@ -254,18 +262,22 @@ public class Evento implements Comparable<Evento>{
 		this.eventoPagoDeCliente = eventoPagoDeCliente;
 	}
 	
+	@ActionLayout(named="Saldo Restante")	
 	public Double getSaldoRestante() {
 		Double a = getEventoPrecioFinal();
 		for(int indice = 0;indice<getEventoPagoDeCliente().size();indice++)
 		{
 			a = a - getEventoPagoDeCliente().get(indice).getPagoDeClienteMonto();
 		}
+		if(a<0) {
+			messageService.informUser("ALERTA: el monto pagado es mayor al Precio Final");
+		}
 		return a;
 	}
 	
 	@javax.jdo.annotations.Column(allowsNull = "true")
 	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Eleccion de musica")
+	@PropertyLayout(named = "Eleccion de musica",hidden=Where.ALL_TABLES)
 	private String eventoEleccionMusica;
 	public String getEventoEleccionMusica() {
 		return eventoEleccionMusica;
@@ -276,13 +288,13 @@ public class Evento implements Comparable<Evento>{
 	
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
-	@PropertyLayout(named = "Activo")
-	private boolean eventoActivo;
-	public boolean isEventoActivo() {
-		return eventoActivo;
+	@PropertyLayout(named = "Estado")
+	private Estado eventoEstado;
+	public Estado getEventoEstado() {
+		return eventoEstado;
 	}
-	public void setEventoActivo(boolean eventoActivo) {
-		this.eventoActivo = eventoActivo;
+	public void setEventoEstado(Estado eventoEstado) {
+		this.eventoEstado = eventoEstado;
 	}
 	
 	public List<ServicioConPrecio> getListaServicioConPrecio(){
@@ -298,13 +310,6 @@ public class Evento implements Comparable<Evento>{
 		return listaServicioConPrecio;
 	}
 
-	@Action(semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE)
-	public void borrarEvento() {
-		final String title = titleService.titleOf(this);
-		messageService.informUser(String.format("'%s' deleted", title));
-		setEventoActivo(false);
-	}
-
 	public Evento modificarEventoFechaPresupuesto(@ParameterLayout(named = "Fecha Presupuesto") final Date eventoFechaPresupuesto) {
 		setEventoFechaPresupuesto(eventoFechaPresupuesto);
 		return this;
@@ -316,6 +321,7 @@ public class Evento implements Comparable<Evento>{
 	
 	public Evento modificarEventoFechaDelEvento(@ParameterLayout(named = "Fecha del Evento") final Date eventoFechaDelEvento) {
 		setEventoFechaDelEvento(eventoFechaDelEvento);
+		eventoEstado.cambiarFechaEvento(this);
 		return this;
 	}
 
@@ -434,14 +440,6 @@ public class Evento implements Comparable<Evento>{
 		return getEventoEleccionMusica();
 	}
 	
-	public Evento modificarActivo(@ParameterLayout(named = "Activo") final boolean eventoActivo) {
-		setEventoActivo(eventoActivo);
-		return this;
-	}
-
-	public boolean default0ModificarActivo() {
-		return isEventoActivo();
-	}
 	// endregion
 
 	// region > toString, compareTo
@@ -458,24 +456,20 @@ public class Evento implements Comparable<Evento>{
 	// endregion
 
 	// acciones
-	@ActionLayout(named = "Listar todas las Eventos")
+	@ActionLayout(named = "Listar todos los Eventos")
 	@MemberOrder(sequence = "2")
 	public List<Evento> listar() {
 		return eventosRepository.listar();
 	}
-
-	@ActionLayout(named = "Listar Evento Activas")
-	@MemberOrder(sequence = "3")
-	public List<Evento> listarActivos() {
-		return eventosRepository.listarActivos();
-	}
-
-	@ActionLayout(named = "Listar Eventos Inactivas")
-	@MemberOrder(sequence = "4")
-	public List<Evento> listarInactivos() {
-		return eventosRepository.listarInactivos();
-	}
 	
+	@Action(invokeOn = InvokeOn.OBJECT_ONLY)
+	@ActionLayout(named = "Anular/Desanular Evento")
+	public Evento anulacion() {
+		eventoEstado.anulacion(this);
+		messageService.warnUser("El evento quedo en estado "+this.eventoEstado);
+		return this;
+	}
+
 	@ActionLayout(named = "Agregar Servicio")
 	public Evento agregarServicio(@ParameterLayout(named = "Servicio") final Servicio servicio) {
 		if (this.getListaServicio().contains(servicio)) {
@@ -484,6 +478,7 @@ public class Evento implements Comparable<Evento>{
 			this.getListaServicio().add(servicio);
 			this.setListaServicio(this.getListaServicio());
 		}
+		eventoEstado.quitarPago(this);
 		return this;
 	}
 
@@ -499,6 +494,7 @@ public class Evento implements Comparable<Evento>{
 			if (lista.equals(servicio))
 				it.remove();
 		}
+		eventoEstado.agregarPago(this);
 		return this;
 	}
 
@@ -513,6 +509,7 @@ public class Evento implements Comparable<Evento>{
 		this.getEventoPagoDeCliente().add(pagoDeClienteRepository.crear(this, pagoDeClienteMonto, 
 				pagoDeClienteFecha, pagoDeClienteObservaciones));
 		this.setEventoPagoDeCliente(this.getEventoPagoDeCliente());
+		eventoEstado.agregarPago(this);
 		return this;
 	}
 	
@@ -524,6 +521,7 @@ public class Evento implements Comparable<Evento>{
 			if (lista.equals(pagoDeCliente))
 				it.remove();
 		}
+		eventoEstado.quitarPago(this);
 		return this;
 	}
 	

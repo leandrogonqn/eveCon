@@ -29,7 +29,7 @@ public class ClientePersonaFisicaMenu {
 
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, cssClassFa = "fa-search", named = "Buscar Por DNI")
-	@MemberOrder(sequence = "6")
+	@MemberOrder(sequence = "1.3")
 	public List<ClientePersonaFisica> buscarPorDNI(@ParameterLayout(named = "DNI") final int clienteDni) {
 		return clientePersonaFisicaRepository.buscarPorDNI(clienteDni);
 	}

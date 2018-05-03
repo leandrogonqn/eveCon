@@ -46,6 +46,10 @@ public class Provincia implements Comparable<Provincia>{
 		this.provinciaNombre = nombre;
 		this.provinciaActivo = true;
 	}
+	
+	public String cssClass() {
+		return (isProvinciaActivo() == true) ? "activo" : "inactivo";
+	}
 
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)

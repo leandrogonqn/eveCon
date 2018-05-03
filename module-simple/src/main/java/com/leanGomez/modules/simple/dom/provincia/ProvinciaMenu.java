@@ -13,7 +13,7 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "simple.ProvinciaMenu", repositoryFor = Provincia.class)
-@DomainServiceLayout(named = "Extras", menuOrder = "10.5")
+@DomainServiceLayout(named = "Extras", menuOrder = "20.1")
 public class ProvinciaMenu {
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Listar todas las provincias")
@@ -24,14 +24,14 @@ public class ProvinciaMenu {
 	
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Buscar Provincia Por Nombre")
-	@MemberOrder(sequence = "5")
+	@MemberOrder(sequence = "3")
 	public List<Provincia> buscarPorNombre(@ParameterLayout(named = "Nombre") final String provinciaNombre) {
 		return provinciasRepository.buscarPorNombre(provinciaNombre);
 
 	}
 
 	@ActionLayout(named = "Crear Provincia")
-	@MemberOrder(sequence = "1.2")
+	@MemberOrder(sequence = "1")
 	public Provincia crear(@ParameterLayout(named = "Nombre") final String provinciaNombre) {
 		return provinciasRepository.crear(provinciaNombre);
 	}

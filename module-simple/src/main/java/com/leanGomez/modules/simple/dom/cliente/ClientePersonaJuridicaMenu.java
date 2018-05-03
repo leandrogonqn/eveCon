@@ -20,12 +20,12 @@ import com.leanGomez.modules.simple.dom.localidad.Localidad;
 import com.leanGomez.modules.simple.dom.localidad.LocalidadRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "simple.ClientePersonaJuridicaMenu", repositoryFor = ClientePersonaJuridica.class)
-@DomainServiceLayout(named = "Clientes", menuOrder = "10.1")
+@DomainServiceLayout(named = "Clientes", menuOrder = "10.2")
 public class ClientePersonaJuridicaMenu {
 
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, cssClassFa = "fa-search", named = "Buscar Empresa Por CUIT")
-	@MemberOrder(sequence = "6")
+	@MemberOrder(sequence = "3")
 	public List<ClientePersonaJuridica> buscarPorCuit(@ParameterLayout(named = "CUIT") final String personaCuitCuil) {
 		return clientePersonaJuridicaRepository.buscarPorCUIT(personaCuitCuil);
 	}
@@ -47,7 +47,7 @@ public class ClientePersonaJuridicaMenu {
 	}
 	
 	@Action(semantics = SemanticsOf.SAFE)
-	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Listar Todos las Empresas")
+	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Listar todas las Empresas")
 	@MemberOrder(sequence = "2")
 	public List<ClientePersonaJuridica> listar() {
 		return clientePersonaJuridicaRepository.listar();

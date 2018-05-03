@@ -21,6 +21,11 @@ import com.leanGomez.modules.simple.dom.localidad.Localidad;
 )
 @Inheritance(strategy=InheritanceStrategy.NEW_TABLE)
 public abstract class Persona {
+	
+	public String cssClass() {
+		return (isPersonaActivo() == true) ? "activo" : "inactivo";
+	}
+	
 	@Column(allowsNull = "false")
     @Property(editing=Editing.DISABLED)
     @PropertyLayout(named="Nombre y apellido / Razon Social")

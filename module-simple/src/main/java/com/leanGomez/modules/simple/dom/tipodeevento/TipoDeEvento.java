@@ -47,6 +47,10 @@ public class TipoDeEvento implements Comparable<TipoDeEvento>{
 		this.tipoDeEventoDescripcion = tipoDeEventoDescripcion;
 		this.tipoDeEventoActivo = true;
 	}
+	
+	public String cssClass() {
+		return (isTipoDeEventoActivo() == true) ? "activo" : "inactivo";
+	}
 
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)

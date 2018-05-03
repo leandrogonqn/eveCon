@@ -63,6 +63,10 @@ public class Salon implements Comparable<Salon>{
 		this.salonResponsable = salonResponsable;
 		this.salonActivo = true;
 	}
+	
+	public String cssClass() {
+		return (isSalonActivo() == true) ? "activo" : "inactivo";
+	}
 
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)

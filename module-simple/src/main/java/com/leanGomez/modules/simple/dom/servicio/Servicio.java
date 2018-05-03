@@ -47,6 +47,10 @@ public class Servicio implements Comparable<Servicio>{
 		this.servicioObservaciones = servicioObservaciones;
 		this.servicioActivo = true;
 	}
+	
+	public String cssClass() {
+		return (isServicioActivo() == true) ? "activo" : "inactivo";
+	}
 
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)

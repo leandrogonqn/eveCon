@@ -10,6 +10,7 @@ import org.apache.isis.applib.services.registry.ServiceRegistry2;
 import org.apache.isis.applib.services.repository.RepositoryService;
 
 import com.leanGomez.modules.simple.dom.cliente.Cliente;
+import com.leanGomez.modules.simple.dom.estado.Estado;
 import com.leanGomez.modules.simple.dom.salon.Salon;
 import com.leanGomez.modules.simple.dom.tipodeevento.TipoDeEvento;
 
@@ -20,12 +21,13 @@ public class EventoRepository {
 		return repositoryService.allInstances(Evento.class);
 	}
 
-//	public List<Evento> buscarPorNombre(final String provinciasNombre) {
-//
-//		return repositoryService.allMatches(new QueryDefault<>(Evento.class, "buscarPorNombre", "provinciaNombre",
-//				provinciasNombre.toLowerCase()));
-//
-//	}
+	public List<Evento> actualizarEstado(final Estado eventoEstado) {
+		Date h = new Date();
+		Date hoy = new Date(h.getYear(), h.getMonth(), h.getDate());
+		return repositoryService.allMatches(new QueryDefault<>(Evento.class, "actualizarEstado", "eventoFechaDelEvento",
+				hoy, "eventoEstado", eventoEstado));
+
+	}
 
 	public List<Evento> listarActivos() {
 		return repositoryService.allMatches(new QueryDefault<>(Evento.class, "listarActivos"));

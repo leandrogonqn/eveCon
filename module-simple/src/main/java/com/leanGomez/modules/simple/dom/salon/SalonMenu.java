@@ -21,7 +21,7 @@ import com.leanGomez.modules.simple.dom.localidad.Localidad;
 import com.leanGomez.modules.simple.dom.localidad.LocalidadRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "simple.SalonMenu", repositoryFor = Salon.class)
-@DomainServiceLayout(named = "Eventos", menuOrder = "10.5")
+@DomainServiceLayout(named = "Eventos", menuOrder = "30.4")
 public class SalonMenu {
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Listar todos los salones")
@@ -32,14 +32,14 @@ public class SalonMenu {
 	
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Buscar Salon Por Nombre")
-	@MemberOrder(sequence = "5")
+	@MemberOrder(sequence = "3")
 	public List<Salon> buscarPorNombre(@ParameterLayout(named = "Nombre") final String salonNombre) {
 		return salonesRepository.buscarPorNombre(salonNombre);
 
 	}
 
 	@ActionLayout(named = "Crear Salon")
-	@MemberOrder(sequence = "1.2")
+	@MemberOrder(sequence = "1")
 	public Salon crear(@ParameterLayout(named = "Nombre") final String salonNombre,
 			@Nullable @ParameterLayout(named = "Direccion") @Parameter(optionality=Optionality.OPTIONAL) final String salonDireccion,
 			@ParameterLayout(named = "Localidad") final Localidad salonLocalidad,

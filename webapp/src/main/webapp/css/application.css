@@ -17,3 +17,37 @@
  *  under the License.
  */
 
+tr.activo {
+	color: black;
+}
+
+tr.inactivo {
+    color: #cc0000;
+    font-weight: bold;
+}
+
+tr.presupuestado{
+	color: #00b900;
+}
+
+tr.confirmado{
+	color: #ff8600;
+}
+
+tr.saldado{
+	color: #000000;
+}
+
+tr.realizado{
+	color: #000000;
+}
+
+tr.realizado_No_Cancelado{
+	color: #cc0000;
+    font-weight: bold;
+}
+
+tr.anulado{
+	color: #a2a2a2;
+    font-weight: bold;
+}

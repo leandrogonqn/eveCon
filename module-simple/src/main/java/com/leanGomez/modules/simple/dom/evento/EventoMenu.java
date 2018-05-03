@@ -20,6 +20,10 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 
 import com.leanGomez.modules.simple.dom.cliente.Cliente;
 import com.leanGomez.modules.simple.dom.cliente.ClienteRepository;
+import com.leanGomez.modules.simple.dom.estado.Estado;
+import com.leanGomez.modules.simple.dom.localidad.Localidad;
+import com.leanGomez.modules.simple.dom.persona.Sexo;
+import com.leanGomez.modules.simple.dom.persona.TipoDeDocumento;
 import com.leanGomez.modules.simple.dom.provincia.Provincia;
 import com.leanGomez.modules.simple.dom.salon.Salon;
 import com.leanGomez.modules.simple.dom.salon.SalonRepository;
@@ -27,7 +31,7 @@ import com.leanGomez.modules.simple.dom.tipodeevento.TipoDeEvento;
 import com.leanGomez.modules.simple.dom.tipodeevento.TipoDeEventoRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "simple.EventoMenu", repositoryFor = Evento.class)
-@DomainServiceLayout(named = "Eventos", menuOrder = "10.5")
+@DomainServiceLayout(named = "Eventos", menuOrder = "30.1")
 public class EventoMenu {
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Listar todas las eventos")
@@ -36,16 +40,16 @@ public class EventoMenu {
 		return eventosRepository.listar();
 	}
 	
-//	@Action(semantics = SemanticsOf.SAFE)
-//	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Buscar Evento Por Nombre")
-//	@MemberOrder(sequence = "5")
-//	public List<Evento> buscarPorNombre(@ParameterLayout(named = "Nombre") final String eventoNombre) {
-//		return eventosRepository.buscarPorNombre(eventoNombre);
-//
-//	}
+	@Action(semantics = SemanticsOf.SAFE)
+	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Prueba")
+	@MemberOrder(sequence = "5")
+	public List<Evento> buscarPorNombre(@ParameterLayout(named = "Estado") final Estado eventoEstado) {
+		return eventosRepository.actualizarEstado(eventoEstado);
+	}
+	
 
 	@ActionLayout(named = "Crear Evento")
-	@MemberOrder(sequence = "1.2")
+	@MemberOrder(sequence = "1")
 	public Evento crear(@ParameterLayout(named = "Fecha presupuesto") final Date eventoFechaPresupuesto,
 			@Nullable@ParameterLayout(named = "Fecha del evento") @Parameter(optionality=Optionality.OPTIONAL)final Date eventoFechaDelEvento, 
 			@Nullable @ParameterLayout(named = "Agasajado") @Parameter(optionality=Optionality.OPTIONAL) final String eventoNombreAgasajado, 
@@ -77,6 +81,25 @@ public class EventoMenu {
 	
 	public List<Salon> choices5Crear() {
 		return salonRepository.listarActivos();
+	}
+	
+	public String validateCrear(@ParameterLayout(named = "Fecha presupuesto") final Date eventoFechaPresupuesto,
+			@Nullable@ParameterLayout(named = "Fecha del evento") @Parameter(optionality=Optionality.OPTIONAL)final Date eventoFechaDelEvento, 
+			@Nullable @ParameterLayout(named = "Agasajado") @Parameter(optionality=Optionality.OPTIONAL) final String eventoNombreAgasajado, 
+			@ParameterLayout(named = "Cliente") final Cliente eventoCliente, 
+			@ParameterLayout(named = "Tipo de Evento") final TipoDeEvento eventoTipoDeEvento, 
+			@ParameterLayout(named = "Salon") final Salon eventoSalon, 
+			@Nullable @ParameterLayout(named = "Cantidad de Personas") @Parameter(optionality=Optionality.OPTIONAL) final Integer eventoCantidadPersonas,
+			@Nullable @ParameterLayout(named = "Hora de Comienzo") @Parameter(optionality=Optionality.OPTIONAL) final String eventoHoraComienzo, 
+			@Nullable @ParameterLayout(named = "Hora de Finalizacion") @Parameter(optionality=Optionality.OPTIONAL) final String eventoHoraFinalizacion, 
+			@Nullable @ParameterLayout(named = "Hora de Comienzo de Armado") @Parameter(optionality=Optionality.OPTIONAL) final String eventoHoraComienzoArmado, 
+			@Nullable @ParameterLayout(named = "Eleccion de Musica", multiLine=10) @Parameter(optionality=Optionality.OPTIONAL) final String eventoEleccionMusica) {
+		Date hoy = new Date();
+		if (eventoFechaDelEvento.before(hoy)) {
+			return "La fecha del evento no puede ser antes a la fecha de hoy";
+		}
+
+		return "";
 	}
 
 	@javax.inject.Inject

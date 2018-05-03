@@ -30,7 +30,7 @@ import com.leanGomez.modules.simple.dom.provincia.Provincia;
 import com.leanGomez.modules.simple.dom.provincia.ProvinciaRepository;
 
 @DomainService(nature = NatureOfService.VIEW_MENU_ONLY, objectType = "simple.LocalidadMenu", repositoryFor = Localidad.class)
-@DomainServiceLayout(named = "Extras", menuOrder = "10.4")
+@DomainServiceLayout(named = "Extras", menuOrder = "20.2")
 public class LocalidadMenu {
 
 	@Action(semantics = SemanticsOf.SAFE)
@@ -42,7 +42,7 @@ public class LocalidadMenu {
 
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Buscar Localidad Por Nombre")
-	@MemberOrder(sequence = "5")
+	@MemberOrder(sequence = "3")
 	public List<Localidad> buscarPorNombre(@ParameterLayout(named = "Nombre") final String localidadNombre) {
 		return localidadesRepository.buscarPorNombre(localidadNombre);
 
@@ -52,7 +52,7 @@ public class LocalidadMenu {
 		return provinciasRepository.listarActivos();
 	}
 
-	@MemberOrder(sequence = "1.2")
+	@MemberOrder(sequence = "1")
 	@ActionLayout(named = "Crear Localidad")
 	public Localidad crear(@ParameterLayout(named = "Nombre") final String localidadNombre,
 			@ParameterLayout(named = "Provincia") final Provincia localidadProvincia) {
@@ -61,7 +61,7 @@ public class LocalidadMenu {
 	
 	@Action(semantics = SemanticsOf.SAFE)
 	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Buscar localidades por provincia")
-	@MemberOrder(sequence = "2")
+	@MemberOrder(sequence = "4")
 	public List<Localidad> buscarPorProvincia(@ParameterLayout(named = "Provincia") final Provincia localidadProvincia) {
 		return localidadesRepository.buscarPorProvincia(localidadProvincia);
 	}
