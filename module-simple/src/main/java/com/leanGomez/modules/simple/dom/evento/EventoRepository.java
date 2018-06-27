@@ -23,10 +23,9 @@ public class EventoRepository {
 
 	public List<Evento> actualizarEstado(final Estado eventoEstado) {
 		Date h = new Date();
-		Date hoy = new Date(h.getYear(), h.getMonth(), h.getDate());
+		Date eventoFechaDelEvento = new Date(h.getYear(), h.getMonth(), h.getDate());
 		return repositoryService.allMatches(new QueryDefault<>(Evento.class, "actualizarEstado", "eventoFechaDelEvento",
-				hoy, "eventoEstado", eventoEstado));
-
+				eventoFechaDelEvento, "eventoEstado", eventoEstado));
 	}
 
 	public List<Evento> listarActivos() {

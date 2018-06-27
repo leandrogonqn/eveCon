@@ -18,12 +18,21 @@
  */
 package com.leanGomez.application.services.homepage;
 
+import java.util.Iterator;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.HomePage;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.factory.FactoryService;
+
+import com.leanGomez.modules.simple.dom.estado.Estado;
+import com.leanGomez.modules.simple.dom.evento.Evento;
+import com.leanGomez.modules.simple.dom.evento.EventoRepository;
 
 @DomainService(
         nature = NatureOfService.DOMAIN, // trick to suppress the actions from the top-level menu
@@ -34,10 +43,23 @@ public class HomePageService {
     @Action(semantics = SemanticsOf.SAFE)
     @HomePage
     public HomePageViewModel homePage() {
+    	actualizarEstado();
         return factoryService.instantiate(HomePageViewModel.class);
     }
 
+	public void actualizarEstado(){
+		List<Evento> listaEventos = eventoRepository.actualizarEstado(Estado.confirmado);
+		listaEventos.addAll(eventoRepository.actualizarEstado(Estado.presupuestado));
+		listaEventos.addAll(eventoRepository.actualizarEstado(Estado.saldado));
+		Iterator<Evento> it = listaEventos.iterator();
+		while (it.hasNext()) {
+			Evento lista = it.next();
+			lista.getEventoEstado().actualizarEstado(lista);
+		}
+	}
 
     @javax.inject.Inject
     FactoryService factoryService;
+    @Inject
+    EventoRepository eventoRepository;
 }

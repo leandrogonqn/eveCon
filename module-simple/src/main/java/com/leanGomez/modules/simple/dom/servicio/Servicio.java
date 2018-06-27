@@ -5,13 +5,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.NotPersistent;
-
+import javax.jdo.annotations.Join;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Auditing;
+import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberOrder;
@@ -24,6 +23,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.title.TitleService;
 
+import com.leanGomez.modules.simple.dom.equipo.Equipo;
+import com.leanGomez.modules.simple.dom.equipo.EquipoRepository;
 import com.leanGomez.modules.simple.dom.preciohistoricoservicio.PrecioHistoricoServicio;
 import com.leanGomez.modules.simple.dom.preciohistoricoservicio.PrecioHistoricoServicioRepository;
 
@@ -78,6 +79,18 @@ public class Servicio implements Comparable<Servicio>{
 		Date hoy = new Date();
 		Double a = precioHistoricoServicioRepository.mostrarPrecioPorFecha(this, hoy);
 		return a;
+	}
+	
+	@Join
+	@javax.jdo.annotations.Column(allowsNull = "true")
+	@Property(editing = Editing.DISABLED)
+	@CollectionLayout(named="Lista de Equipos")
+	private List<Equipo> servicioListaDeEquipos;
+	public List<Equipo> getServicioListaDeEquipos() {
+		return servicioListaDeEquipos;
+	}
+	public void setServicioListaDeEquipos(List<Equipo> servicioListaDeEquipos) {
+		this.servicioListaDeEquipos = servicioListaDeEquipos;
 	}
 	
 	@javax.jdo.annotations.Column(allowsNull = "false")
@@ -160,6 +173,38 @@ public class Servicio implements Comparable<Servicio>{
 	// endregion
 
 	// acciones
+	
+	@ActionLayout(named = "Agregar Equipo")
+	public Servicio agregarEquipo(@ParameterLayout(named = "Equipo") final Equipo equipo) {
+		this.getServicioListaDeEquipos().add(equipo);
+		this.setServicioListaDeEquipos(this.getServicioListaDeEquipos());
+		return this;
+	}
+
+	public List<Equipo> choices0AgregarEquipo() {
+		return equipoRepository.listarActivos();
+	}
+
+	@ActionLayout(named = "Quitar Equipo")
+	public Servicio quitarEquipo(@ParameterLayout(named = "Equipo") Equipo equipo,
+			@ParameterLayout (named = "Eliminar todos los items iguales") boolean eliminarIguales) {
+		Iterator<Equipo> it = getServicioListaDeEquipos().iterator();
+		while (it.hasNext()) {
+			Equipo lista = it.next();
+			if (lista.equals(equipo)){
+				it.remove();
+				if (eliminarIguales==false){
+					break;
+				}
+			}
+		}
+		return this;
+	}
+
+	public List<Equipo> choices0QuitarEquipo() {
+		return getServicioListaDeEquipos();
+	}
+	
 	@ActionLayout(named = "Listar todas las Servicios")
 	@MemberOrder(sequence = "2")
 	public List<Servicio> listar() {
@@ -184,7 +229,6 @@ public class Servicio implements Comparable<Servicio>{
 		return precioHistoricoServicioRepository.listarPreciosPorServicio(this);
 	}
 
-	
 	@javax.inject.Inject
 	TitleService titleService;
 
@@ -196,4 +240,7 @@ public class Servicio implements Comparable<Servicio>{
 	
 	@Inject
 	PrecioHistoricoServicioRepository precioHistoricoServicioRepository;
+	
+	@Inject
+	EquipoRepository equipoRepository;
 }

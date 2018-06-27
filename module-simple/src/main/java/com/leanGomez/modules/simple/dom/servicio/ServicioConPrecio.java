@@ -1,9 +1,7 @@
 package com.leanGomez.modules.simple.dom.servicio;
 
-import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Nature;
-import org.apache.isis.applib.annotation.ParameterLayout;
 
 @DomainObject(nature = Nature.VIEW_MODEL, objectType="ServicioConPrecio")
 public class ServicioConPrecio{

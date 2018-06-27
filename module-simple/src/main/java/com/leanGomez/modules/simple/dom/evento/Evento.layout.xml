@@ -32,6 +32,9 @@
                                 <c:property id="eventoFechaPresupuesto" namedEscaped="true">
                                 <c:action id="modificarEventoFechaPresupuesto" position="RIGHT"></c:action>
                                 </c:property>		
+                                <c:property id="eventoFechaPrecioEmpleados" namedEscaped="true">
+                                <c:action id="modificarEventoFechaPrecioEmpleados" position="RIGHT"></c:action>
+                                </c:property>	                                
                                 <c:property id="eventoFechaDelEvento" namedEscaped="true">
                                 <c:action id="modificarEventoFechaDelEvento" position="RIGHT"></c:action>
                                 </c:property>
@@ -124,6 +127,17 @@
                         </bs3:col>
                     </bs3:row>
                 </bs3:tab>
+                <bs3:tab name="Lista de Empleados">
+                    <bs3:row>
+                        <bs3:col span="12" size="MD">
+                        	<c:action id="agregarEmpleado"/>
+                        	<c:action id="quitarEmpleado"/>
+				        </bs3:col>
+				        <bs3:col span="12">    
+                            <c:collection defaultView="table" id="eventoListaEmpleados" />
+                        </bs3:col>
+                    </bs3:row>
+                </bs3:tab>                
             </bs3:tabGroup>
         </bs3:col>
     </bs3:row>

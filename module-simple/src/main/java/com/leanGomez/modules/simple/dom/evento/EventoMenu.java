@@ -17,6 +17,7 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
+import org.apache.isis.applib.annotation.Where;
 
 import com.leanGomez.modules.simple.dom.cliente.Cliente;
 import com.leanGomez.modules.simple.dom.cliente.ClienteRepository;
@@ -40,14 +41,6 @@ public class EventoMenu {
 		return eventosRepository.listar();
 	}
 	
-	@Action(semantics = SemanticsOf.SAFE)
-	@ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, named = "Prueba")
-	@MemberOrder(sequence = "5")
-	public List<Evento> buscarPorNombre(@ParameterLayout(named = "Estado") final Estado eventoEstado) {
-		return eventosRepository.actualizarEstado(eventoEstado);
-	}
-	
-
 	@ActionLayout(named = "Crear Evento")
 	@MemberOrder(sequence = "1")
 	public Evento crear(@ParameterLayout(named = "Fecha presupuesto") final Date eventoFechaPresupuesto,
@@ -102,6 +95,8 @@ public class EventoMenu {
 		return "";
 	}
 
+	@Inject
+	Evento e;
 	@javax.inject.Inject
 	EventoRepository eventosRepository;
 	@Inject

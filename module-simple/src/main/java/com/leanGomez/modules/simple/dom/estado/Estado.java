@@ -1,11 +1,6 @@
 package com.leanGomez.modules.simple.dom.estado;
 
 import java.util.Date;
-
-import javax.inject.Inject;
-
-import org.apache.isis.applib.services.message.MessageService;
-
 import com.leanGomez.modules.simple.dom.evento.Evento;
 
 public enum Estado implements IEstado {
@@ -14,17 +9,23 @@ public enum Estado implements IEstado {
 		@Override
 		public void agregarPago(Evento evento) {
 			// TODO Auto-generated method stub
-			if (evento.getSaldoRestante()>0) {
-				evento.setEventoEstado(confirmado);
-			} else {
-				evento.setEventoEstado(saldado);
+			if (evento.getEventoPagoDeCliente().size()>0){
+				if (evento.getSaldoRestante()>0) {
+					evento.setEventoEstado(confirmado);
+				} else {
+					evento.setEventoEstado(saldado);
+				}	
 			}
 		}
 
 		@Override
 		public void actualizarEstado(Evento evento) {
 			// TODO Auto-generated method stub
-			
+			if(evento.getSaldoRestante()>0){
+				evento.setEventoEstado(realizado_No_Cancelado);
+			}else{
+				evento.setEventoEstado(realizado);
+			}
 		}
 	},
 	confirmado{
@@ -48,7 +49,11 @@ public enum Estado implements IEstado {
 		@Override
 		public void actualizarEstado(Evento evento) {
 			// TODO Auto-generated method stub
-			
+			if(evento.getSaldoRestante()>0){
+				evento.setEventoEstado(realizado_No_Cancelado);
+			}else{
+				evento.setEventoEstado(realizado);
+			}
 		}
 
 	},
@@ -69,7 +74,11 @@ public enum Estado implements IEstado {
 		@Override
 		public void actualizarEstado(Evento evento) {
 			// TODO Auto-generated method stub
-			
+			if(evento.getSaldoRestante()>0){
+				evento.setEventoEstado(realizado_No_Cancelado);
+			}else{
+				evento.setEventoEstado(realizado);
+			}
 		}
 		
 		@Override
@@ -91,12 +100,6 @@ public enum Estado implements IEstado {
 			if(evento.getSaldoRestante()>0) {
 				evento.setEventoEstado(realizado_No_Cancelado);
 			}
-		}
-
-		@Override
-		public void actualizarEstado(Evento evento) {
-			// TODO Auto-generated method stub
-			
 		}
 		
 		@Override
@@ -121,12 +124,6 @@ public enum Estado implements IEstado {
 		}
 
 		@Override
-		public void actualizarEstado(Evento evento) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-		@Override
 		public void cambiarFechaEvento(Evento evento) {
 			// TODO Auto-generated method stub
 			Date h = new Date();
@@ -144,12 +141,6 @@ public enum Estado implements IEstado {
 	anulado{
 
 		@Override
-		public void actualizarEstado(Evento evento) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
 		public void anulacion(Evento evento) {
 			// TODO Auto-generated method stub
 			Date h = new Date();
@@ -161,7 +152,7 @@ public enum Estado implements IEstado {
 					if(evento.getSaldoRestante()>0) {
 						evento.setEventoEstado(confirmado);
 					}else {
-						evento.setEventoEstado(saldado);
+						evento.setEventoEstado(saldado);	
 					}
 				}
 			}else {
@@ -197,7 +188,7 @@ public enum Estado implements IEstado {
 	@Override
 	public void actualizarEstado(Evento evento) {
 		// TODO Auto-generated method stub
-		
+		//no hacer nada
 	}
 
 	@Override

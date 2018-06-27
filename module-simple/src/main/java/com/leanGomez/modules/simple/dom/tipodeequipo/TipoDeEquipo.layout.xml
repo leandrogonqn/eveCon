@@ -22,23 +22,20 @@
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="6">
+        <bs3:col span="12">
             <bs3:tabGroup>
                 <bs3:tab name="General">
                     <bs3:row>
-                        <bs3:col span="12">
+                        <bs3:col span="6">
                             <c:fieldSet name="Nombre">
-                                <c:action id="borrarServicio"/>
-                                <c:property id="servicioNombre" namedEscaped="true">
+                                <c:action id="borrarTipoDeEquipo"/>
+                                <c:property id="tipoDeEquipoNombre" namedEscaped="true">
                                 <c:action id="modificarNombre" position="RIGHT"></c:action>
                                 </c:property>
-                                <c:property id="servicioObservaciones" namedEscaped="true">
-                                <c:action id="modificarObservaciones" position="RIGHT"></c:action>
-                                </c:property>              
-                                 <c:property id="precioActualServicio" namedEscaped="true">
-                                <c:action id="modificarPrecio" position="RIGHT"></c:action>
-                                </c:property>                                                   
-                                <c:property id="servicioActivo" namedEscaped="true">
+                                <c:property id="tipoDeEquipoDescripcion" namedEscaped="true">
+                                <c:action id="modificarDescripcion" position="RIGHT"></c:action>
+                                </c:property>                                
+                                <c:property id="tipoDeEquipoActivo" namedEscaped="true">
                                 <c:action id="modificarActivo" position="RIGHT"></c:action>
                                 </c:property>
                             </c:fieldSet>
@@ -60,23 +57,12 @@
                     </bs3:row>
                 </bs3:tab>
             </bs3:tabGroup>
+            <bs3:tabGroup>
+            </bs3:tabGroup>
         </bs3:col>
         <bs3:col span="6">
             <bs3:tabGroup  unreferencedCollections="true">
             </bs3:tabGroup>
-            <bs3:tabGroup  unreferencedCollections="true">
-            	<bs3:tab name="Lista de Equipos">
-                    <bs3:row>
-                        <bs3:col span="12" size="MD">
-                        	<c:action id="agregarEquipo"/>
-                        	<c:action id="quitarEquipo"/>
-				        </bs3:col>
-				        <bs3:col span="12">    
-                            <c:collection defaultView="table" id="servicioListaDeEquipos" />
-                        </bs3:col>
-                    </bs3:row>
-                </bs3:tab>
-           	</bs3:tabGroup>
         </bs3:col>
     </bs3:row>
 </bs3:grid>

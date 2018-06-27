@@ -32,10 +32,19 @@ import org.apache.isis.applib.services.title.TitleService;
 
 import com.leanGomez.modules.simple.dom.cliente.Cliente;
 import com.leanGomez.modules.simple.dom.cliente.ClienteRepository;
+import com.leanGomez.modules.simple.dom.empleado.Empleado;
+import com.leanGomez.modules.simple.dom.empleado.EmpleadoRepository;
+import com.leanGomez.modules.simple.dom.empleadoocupacion.EmpleadoOcupacion;
+import com.leanGomez.modules.simple.dom.empleadoocupacion.EmpleadoOcupacionRepository;
+import com.leanGomez.modules.simple.dom.equipo.Equipo;
 import com.leanGomez.modules.simple.dom.estado.Estado;
 import com.leanGomez.modules.simple.dom.localidad.LocalidadRepository;
+import com.leanGomez.modules.simple.dom.ocupacion.Ocupacion;
+import com.leanGomez.modules.simple.dom.ocupacion.OcupacionConPrecio;
+import com.leanGomez.modules.simple.dom.ocupacion.OcupacionRepository;
 import com.leanGomez.modules.simple.dom.pagodecliente.PagoDeCliente;
 import com.leanGomez.modules.simple.dom.pagodecliente.PagoDeClienteRepository;
+import com.leanGomez.modules.simple.dom.preciohistoricoocupacion.PrecioHistoricoOcupacionRepository;
 import com.leanGomez.modules.simple.dom.preciohistoricoservicio.PrecioHistoricoServicioRepository;
 import com.leanGomez.modules.simple.dom.salon.Salon;
 import com.leanGomez.modules.simple.dom.salon.SalonRepository;
@@ -49,7 +58,7 @@ import com.leanGomez.modules.simple.dom.tipodeevento.TipoDeEventoRepository;
 @javax.jdo.annotations.DatastoreIdentity(strategy = javax.jdo.annotations.IdGeneratorStrategy.IDENTITY, column = "eventoId")
 @javax.jdo.annotations.Queries({
 	@javax.jdo.annotations.Query(name = "actualizarEstado", language = "JDOQL", value = "SELECT "
-			+ "FROM com.leanGomez.modules.simple.dom.evento.Evento " + "WHERE eventoFechaDelEvento >= :hoy AND eventoEstado == :eventoEstado")})
+			+ "FROM com.leanGomez.modules.simple.dom.evento.Evento " + "WHERE eventoFechaDelEvento < :eventoFechaDelEvento && eventoEstado == :eventoEstado")})
 @DomainObject(publishing = Publishing.ENABLED, auditing = Auditing.ENABLED)
 public class Evento implements Comparable<Evento>{
 
@@ -72,6 +81,7 @@ public class Evento implements Comparable<Evento>{
 			String eventoHoraComienzoArmado, String eventoEleccionMusica) {
 		super();
 		this.eventoFechaPresupuesto = eventoFechaPresupuesto;
+		this.eventoFechaPrecioEmpleados = eventoFechaPresupuesto;
 		this.eventoFechaDelEvento = eventoFechaDelEvento;
 		this.eventoNombreAgasajado = eventoNombreAgasajado;
 		this.eventoCliente = eventoCliente;
@@ -87,6 +97,10 @@ public class Evento implements Comparable<Evento>{
 		this.eventoEstado = Estado.presupuestado;
 	}
 	
+	public Evento() {
+		// TODO Auto-generated constructor stub
+	}
+
 	@javax.jdo.annotations.Column(allowsNull = "false")
 	@Property(editing = Editing.DISABLED)
 	@PropertyLayout(named = "Fecha Presupuesto",hidden=Where.ALL_TABLES)
@@ -96,6 +110,17 @@ public class Evento implements Comparable<Evento>{
 	}
 	public void setEventoFechaPresupuesto(Date eventoFechaPresupuesto) {
 		this.eventoFechaPresupuesto = eventoFechaPresupuesto;
+	}
+	
+	@javax.jdo.annotations.Column(allowsNull = "false")
+	@Property(editing = Editing.DISABLED)
+	@PropertyLayout(named = "Fecha Precio Empleados",hidden=Where.ALL_TABLES)
+	private Date eventoFechaPrecioEmpleados;
+	public Date getEventoFechaPrecioEmpleados() {
+		return eventoFechaPrecioEmpleados;
+	}
+	public void setEventoFechaPrecioEmpleados(Date eventoFechaPrecioEmpleados) {
+		this.eventoFechaPrecioEmpleados = eventoFechaPrecioEmpleados;
 	}
 
 	@javax.jdo.annotations.Column(allowsNull = "true")
@@ -262,6 +287,18 @@ public class Evento implements Comparable<Evento>{
 		this.eventoPagoDeCliente = eventoPagoDeCliente;
 	}
 	
+	@Join
+	@javax.jdo.annotations.Column(allowsNull = "true")
+	@Property(editing = Editing.DISABLED)
+	@PropertyLayout(named = "Lista de Empleados", hidden=Where.EVERYWHERE)
+	private List<EmpleadoOcupacion> eventoListaEmpleados;
+	public List<EmpleadoOcupacion> getEventoListaEmpleados() {
+		return eventoListaEmpleados;
+	}
+	public void setEventoListaEmpleados(List<EmpleadoOcupacion> eventoListaEmpleados) {
+		this.eventoListaEmpleados = eventoListaEmpleados;
+	}
+	
 	@ActionLayout(named="Saldo Restante")	
 	public Double getSaldoRestante() {
 		Double a = getEventoPrecioFinal();
@@ -304,10 +341,19 @@ public class Evento implements Comparable<Evento>{
 			Servicio s = listaServicio.get(indice);
 			Double p = precioHistoricoServicioRepository.mostrarPrecioPorFecha(s, this.eventoFechaPresupuesto);
 			listaServicioConPrecio.add(new ServicioConPrecio(s, p));
-		    
 		}
-
 		return listaServicioConPrecio;
+	}
+	
+	public List<OcupacionConPrecio> getListaOcupacionConPrecio(){
+		List<OcupacionConPrecio> listaOcupacionConPrecio = new ArrayList<>();
+		for(int indice = 0;indice<eventoListaEmpleados.size();indice++)
+		{
+			EmpleadoOcupacion o = eventoListaEmpleados.get(indice);
+			Double p = precioHistoricoOcupacionRepository.mostrarPrecioPorFecha(o.getOcupacion(), this.eventoFechaPrecioEmpleados);
+			listaOcupacionConPrecio.add(new OcupacionConPrecio(o.getOcupacion(), o.getEmpleado(), p));
+		}
+		return listaOcupacionConPrecio;
 	}
 
 	public Evento modificarEventoFechaPresupuesto(@ParameterLayout(named = "Fecha Presupuesto") final Date eventoFechaPresupuesto) {
@@ -317,6 +363,15 @@ public class Evento implements Comparable<Evento>{
 
 	public Date default0ModificarEventoFechaPresupuesto() {
 		return getEventoFechaPresupuesto();
+	}
+	
+	public Evento modificarEventoFechaPrecioEmpleados(@ParameterLayout(named = "Fecha Precio Empleados") final Date eventoFechaPrecioEmpleados) {
+		setEventoFechaPrecioEmpleados(eventoFechaPrecioEmpleados);
+		return this;
+	}
+
+	public Date default0ModificarEventoFechaPrecioEmpleados() {
+		return getEventoFechaPrecioEmpleados();
 	}
 	
 	public Evento modificarEventoFechaDelEvento(@ParameterLayout(named = "Fecha del Evento") final Date eventoFechaDelEvento) {
@@ -469,7 +524,7 @@ public class Evento implements Comparable<Evento>{
 		messageService.warnUser("El evento quedo en estado "+this.eventoEstado);
 		return this;
 	}
-
+	
 	@ActionLayout(named = "Agregar Servicio")
 	public Evento agregarServicio(@ParameterLayout(named = "Servicio") final Servicio servicio) {
 		if (this.getListaServicio().contains(servicio)) {
@@ -529,12 +584,50 @@ public class Evento implements Comparable<Evento>{
 		return getEventoPagoDeCliente();
 	}
 	
-//	@ActionLayout(named = "Listar Localidades de esta Evento")
-//	@MemberOrder(sequence = "5")
-//	public List<Localidad> listarEvento(){
-//		return localidadRepository.buscarPorEvento(this);
-//	}
-
+	@ActionLayout(named="Agregar Empleado")
+	public Evento agregarEmpleado(@ParameterLayout(named = "Ocupacion") Ocupacion ocupacion,
+								@ParameterLayout(named = "Empleado") Empleado empleado) {
+		EmpleadoOcupacion eo = empleadoOcupacionRepository.crear(empleado, ocupacion);
+		this.getEventoListaEmpleados().add(eo);
+		return this;
+	}
+	
+	public List<Ocupacion> choices0AgregarEmpleado(){
+		return ocupacionRepository.listarActivos();
+	}
+	
+	public List<Empleado> choices1AgregarEmpleado(final Ocupacion ocupacion, final Empleado empleado) {
+		return empleadoRepository.listarEmpleadosPorOcupacion(ocupacion);
+	}
+	
+	public Ocupacion default0AgregarEmpleado() {
+		return ocupacionRepository.listarActivos().get(0);
+	}
+	
+	@ActionLayout(named = "Quitar Empleado")
+	public Evento quitarEmpleado(@ParameterLayout(named = "Empleado") EmpleadoOcupacion empleado) {
+		Iterator<EmpleadoOcupacion> it = getEventoListaEmpleados().iterator();
+		while (it.hasNext()) {
+			EmpleadoOcupacion lista = it.next();
+			if (lista.equals(empleado))
+				it.remove();
+		}
+		return this;
+	}
+	
+	public List<EmpleadoOcupacion> choices0QuitarEmpleado() {
+		return getEventoListaEmpleados();
+	}
+	
+	public List<Equipo> listarEquiposDelEvento(){
+		List<Equipo> listaEquipos = new ArrayList<>();
+		Iterator<Servicio> it = getListaServicio().iterator();
+		while (it.hasNext()) {
+			Servicio lista = it.next();
+			listaEquipos.addAll(lista.getServicioListaDeEquipos());
+		}
+		return listaEquipos;
+	}
 	
 	@javax.inject.Inject
 	TitleService titleService;
@@ -565,5 +658,17 @@ public class Evento implements Comparable<Evento>{
 	
 	@Inject
 	PrecioHistoricoServicioRepository precioHistoricoServicioRepository;
+	
+	@Inject
+	OcupacionRepository ocupacionRepository;
+	
+	@Inject
+	EmpleadoRepository empleadoRepository;
+	
+	@Inject
+	PrecioHistoricoOcupacionRepository precioHistoricoOcupacionRepository;
+	
+	@Inject
+	EmpleadoOcupacionRepository empleadoOcupacionRepository;
 	
 }
